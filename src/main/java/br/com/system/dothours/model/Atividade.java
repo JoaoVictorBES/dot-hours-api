@@ -1,6 +1,7 @@
 package br.com.system.dothours.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,42 +10,52 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "projetos")
-public class Projetos {
+@Table(name = "atividades")
+public class Atividade {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long id_projeto; // Inlcuir chave estrangeira para projetos//
     private String nome;
     private String descricao;
-    private LocalDate  data_inicio;
-    private LocalDate data_fim;
+    private LocalDateTime data_inicio;
+    private LocalDateTime data_fim;
     private String status;
-    private Long id_usuario_responsavel; // Denifir chave estrangeira para usuario relação many to one //
+    private Long id_usuario_responsavel; // Incluir chave estrangeira para usuários//
     private LocalDate data_criacao;
-    private String prioridade;
 
-    public Projetos() {
 
+    public Atividade() {
+        
     }
 
-    public Projetos(Long id, String nome, String descricao, LocalDate data_inicio, LocalDate data_fim, Long id_usuario_responsavel, LocalDate data_criacao, String prioridade) {
+    public Atividade(Long id, Long id_projeto, String nome, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, String status, Long id_usuario_responsavel, LocalDate data_criacao) {
         this.id = id;
+        this.id_projeto = id_projeto;
         this.nome = nome;
         this.descricao = descricao;
         this.data_inicio = data_inicio;
         this.data_fim = data_fim;
+        this.status = status;
         this.id_usuario_responsavel = id_usuario_responsavel;
         this.data_criacao = data_criacao;
-        this.prioridade = prioridade;
     }
-    
+
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getId_projeto() {
+        return id_projeto;
+    }
+
+    public void setId_projeto(Long id_projeto) {
+        this.id_projeto = id_projeto;
     }
 
     public String getNome() {
@@ -63,20 +74,28 @@ public class Projetos {
         this.descricao = descricao;
     }
 
-    public LocalDate getData_inicio() {
+    public LocalDateTime getData_inicio() {
         return data_inicio;
     }
 
-    public void setData_inicio(LocalDate data_inicio) {
+    public void setData_inicio(LocalDateTime data_inicio) {
         this.data_inicio = data_inicio;
     }
 
-    public LocalDate getData_fim() {
+    public LocalDateTime getData_fim() {
         return data_fim;
     }
 
-    public void setData_fim(LocalDate data_fim) {
+    public void setData_fim(LocalDateTime data_fim) {
         this.data_fim = data_fim;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Long getId_usuario_responsavel() {
@@ -95,20 +114,5 @@ public class Projetos {
         this.data_criacao = data_criacao;
     }
 
-    public String getPrioridade() {
-        return prioridade;
-    }
-
-    public void setPrioridade(String prioridade) {
-        this.prioridade = prioridade;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+    
 }

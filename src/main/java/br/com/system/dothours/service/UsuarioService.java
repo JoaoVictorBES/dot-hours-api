@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.model.Usuario;
-import br.com.system.dothours.repository.UsuariosRepository;
+import br.com.system.dothours.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
 
     @Autowired
-    public UsuariosRepository usuariosRepository;
+    public UsuarioRepository usuariosRepository;
 
     public Usuario create(Usuario usuario) {
 
