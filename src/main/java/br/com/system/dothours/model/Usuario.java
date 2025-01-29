@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios")
-public class usuarios {
+public class Usuario {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,11 @@ public class usuarios {
     private LocalDate ultimo_login;
     private String role;
 
-    public usuarios() {
+    public Usuario() {
+        
     }
 
-    public usuarios(Long id, String nome, String email, String senha, LocalDate data_criaçao, LocalDate ultimo_login, String role) {
+    public Usuario(Long id, String nome, String email, String senha, LocalDate data_criaçao, LocalDate ultimo_login, String role) {
         this.id = id;
         this.nome = nome;
         this.email = email;

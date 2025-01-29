@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "projetos")
-public class projetos {
+public class Projetos {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,11 @@ public class projetos {
     private LocalDate data_criacao;
     private String prioridade;
 
-    public projetos() {
+    public Projetos() {
 
     }
 
-    public projetos(Long id, String nome, String descricao, LocalDate data_inicio, LocalDate data_fim, Long id_usuario_responsavel, LocalDate data_criacao, String prioridade) {
+    public Projetos(Long id, String nome, String descricao, LocalDate data_inicio, LocalDate data_fim, Long id_usuario_responsavel, LocalDate data_criacao, String prioridade) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;

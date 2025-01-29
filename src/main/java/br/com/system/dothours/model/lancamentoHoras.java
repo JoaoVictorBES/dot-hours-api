@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "lancamento_horas")
-public class lancamentoHoras {
+public class LancamentoHoras {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class lancamentoHoras {
     private LocalDateTime data_registro;
 
 
-    public lancamentoHoras() {
+    public LancamentoHoras() {
 
     }
 
-    public lancamentoHoras(Long id, Long id_atividade, Long id_usuario, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, LocalDateTime data_registro) {
+    public LancamentoHoras(Long id, Long id_atividade, Long id_usuario, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, LocalDateTime data_registro) {
         this.id = id;
         this.id_atividade = id_atividade;
         this.id_usuario = id_usuario;

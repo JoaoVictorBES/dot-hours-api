@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "atividades")
-public class atividades {
+public class Atividades {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +26,11 @@ public class atividades {
     private LocalDate data_criacao;
 
 
-    public atividades() {
+    public Atividades() {
         
     }
 
-    public atividades(Long id, Long id_projeto, String nome, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, String status, Long id_usuario_responsavel, LocalDate data_criacao) {
+    public Atividades(Long id, Long id_projeto, String nome, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, String status, Long id_usuario_responsavel, LocalDate data_criacao) {
         this.id = id;
         this.id_projeto = id_projeto;
         this.nome = nome;
