@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.system.dothours.model.Atividade;
+import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.AtividadeService;
 
 @RestController
@@ -83,8 +84,8 @@ public class AtividadeController {
 
 
     @GetMapping("/{id_usuario_responsavel}")
-    public ResponseEntity<List<Atividade>> findByUsuarioResponsavel(@PathVariable Long id_usuario_responsavel) {
-        List<Atividade> atividades = atividadeService.findByUsuarioResponsavel(id_usuario_responsavel);
+    public ResponseEntity<List<Atividade>> findByUsuarioResponsavel(@PathVariable Usuario usuarioResponsavel) {
+        List<Atividade> atividades = atividadeService.findByUsuarioResponsavel(usuarioResponsavel);
         return ResponseEntity.ok(atividades);
     }
 

@@ -42,8 +42,8 @@ public class LancamentoHorasService {
     public LancamentoHoras update(Long id, LancamentoHoras lancamentoAtualizado) {
 
         return lancamentoHorasRepository.findById(id).map(lancamento -> {
-            lancamento.setId_atividade(lancamentoAtualizado.getId_atividade());
-            lancamento.setId_usuario(lancamentoAtualizado.getId_usuario());
+            lancamento.setAtividade(lancamentoAtualizado.getAtividade());
+            lancamento.setUsuario(lancamentoAtualizado.getUsuario());
             lancamento.setDescricao(lancamentoAtualizado.getDescricao());
             lancamento.setData_inicio(lancamentoAtualizado.getData_inicio());
             lancamento.setData_fim(lancamentoAtualizado.getData_fim());

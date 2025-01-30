@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,8 +17,15 @@ public class LancamentoHoras {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long id_atividade; // Chave estrangeira para atividade //
-    private Long id_usuario; // Chave estrangeira para usuario //
+    
+    @ManyToOne
+    @JoinColumn(name = "id_atividade", nullable = false)
+    private Atividade atividade; // Relação com Atividade
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
     private String descricao;
     private LocalDateTime data_inicio;
     private LocalDateTime data_fim;
@@ -27,10 +36,10 @@ public class LancamentoHoras {
 
     }
 
-    public LancamentoHoras(Long id, Long id_atividade, Long id_usuario, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, LocalDateTime data_registro) {
+    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, LocalDateTime data_registro) {
         this.id = id;
-        this.id_atividade = id_atividade;
-        this.id_usuario = id_usuario;
+        this.atividade = atividade;
+        this.usuario = usuario;
         this.descricao = descricao;
         this.data_inicio = data_inicio;
         this.data_fim = data_fim;
@@ -45,20 +54,20 @@ public class LancamentoHoras {
         this.id = id;
     }
 
-    public Long getId_atividade() {
-        return id_atividade;
+    public Atividade getAtividade() {
+        return atividade;
     }
-
-    public void setId_atividade(Long id_atividade) {
-        this.id_atividade = id_atividade;
+    
+    public void setAtividade(Atividade atividade) {
+        this.atividade = atividade;
     }
-
-    public Long getId_usuario() {
-        return id_usuario;
+    
+    public Usuario getUsuario() {
+        return usuario;
     }
-
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getDescricao() {

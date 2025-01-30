@@ -2,11 +2,16 @@ package br.com.system.dothours.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,29 +21,40 @@ public class Atividade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long id_projeto; // Inlcuir chave estrangeira para projetos//
+    
+    @ManyToOne
+    @JoinColumn(name = "id_projeto", nullable = false)
+    private Projeto projeto;
+
     private String nome;
     private String descricao;
     private LocalDateTime data_inicio;
     private LocalDateTime data_fim;
     private String status;
-    private Long id_usuario_responsavel; // Incluir chave estrangeira para usuários//
+    
+    @ManyToOne
+    @JoinColumn(name = "id_usuario_responsavel", nullable = false)
+    private Usuario usuarioResponsavel;
+    
     private LocalDate data_criacao;
+
+    @ManyToMany(mappedBy = "atividades")
+    private List<Usuario> usuarios = new ArrayList<>();
 
 
     public Atividade() {
         
     }
 
-    public Atividade(Long id, Long id_projeto, String nome, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, String status, Long id_usuario_responsavel, LocalDate data_criacao) {
+    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, String status, Usuario usuarioResponsavel, LocalDate data_criacao) {
         this.id = id;
-        this.id_projeto = id_projeto;
+        this.projeto = projeto;
         this.nome = nome;
         this.descricao = descricao;
         this.data_inicio = data_inicio;
         this.data_fim = data_fim;
         this.status = status;
-        this.id_usuario_responsavel = id_usuario_responsavel;
+        this.usuarioResponsavel = usuarioResponsavel;
         this.data_criacao = data_criacao;
     }
 
@@ -50,12 +66,12 @@ public class Atividade {
         this.id = id;
     }
 
-    public Long getId_projeto() {
-        return id_projeto;
+    public Projeto getProjeto() {
+        return projeto;
     }
 
-    public void setId_projeto(Long id_projeto) {
-        this.id_projeto = id_projeto;
+    public void setProjeto(Projeto projeto) {
+        this.projeto = projeto;
     }
 
     public String getNome() {
@@ -98,12 +114,12 @@ public class Atividade {
         this.status = status;
     }
 
-    public Long getId_usuario_responsavel() {
-        return id_usuario_responsavel;
+    public Usuario getUsuarioResponsavel() {
+        return usuarioResponsavel;
     }
 
-    public void setId_usuario_responsavel(Long id_usuario_responsavel) {
-        this.id_usuario_responsavel = id_usuario_responsavel;
+    public void setUsuarioResponsavel(Usuario usuarioResponsavel) {
+        this.usuarioResponsavel = usuarioResponsavel;
     }
 
     public LocalDate getData_criacao() {
@@ -112,6 +128,14 @@ public class Atividade {
 
     public void setData_criacao(LocalDate data_criacao) {
         this.data_criacao = data_criacao;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
     

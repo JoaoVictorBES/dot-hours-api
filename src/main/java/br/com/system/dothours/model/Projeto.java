@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,7 +22,11 @@ public class Projeto {
     private LocalDate  data_inicio;
     private LocalDate data_fim;
     private String status;
-    private Long id_usuario_responsavel; // Denifir chave estrangeira para usuario relação many to one //
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
+    private Usuario id_usuario_responsavel; 
+
     private LocalDate data_criacao;
     private String prioridade;
 
@@ -28,7 +34,7 @@ public class Projeto {
 
     }
 
-    public Projeto(Long id, String nome, String descricao, LocalDate data_inicio, LocalDate data_fim, Long id_usuario_responsavel, LocalDate data_criacao, String prioridade) {
+    public Projeto(Long id, String nome, String descricao, LocalDate data_inicio, LocalDate data_fim, Usuario id_usuario_responsavel, LocalDate data_criacao, String prioridade) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -80,11 +86,14 @@ public class Projeto {
     }
 
     public Long getId_usuario_responsavel() {
-        return id_usuario_responsavel;
+        return id_usuario_responsavel != null ? id_usuario_responsavel.getId() : null;
     }
 
     public void setId_usuario_responsavel(Long id_usuario_responsavel) {
-        this.id_usuario_responsavel = id_usuario_responsavel;
+        if (id_usuario_responsavel != null) {
+            this.id_usuario_responsavel = new Usuario();
+            this.id_usuario_responsavel.setId(id_usuario_responsavel);
+        }
     }
 
     public LocalDate getData_criacao() {

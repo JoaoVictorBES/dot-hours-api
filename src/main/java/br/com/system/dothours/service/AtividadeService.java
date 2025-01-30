@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.model.Atividade;
+import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.AtividadeRepository;
 
 @Service
@@ -39,13 +40,13 @@ public class AtividadeService {
     public Atividade update(Long id, Atividade atividadeAtualizada) {
 
         return atividadesRepository.findById(id).map(atividade -> {
-            atividade.setId_projeto(atividadeAtualizada.getId_projeto());
+            atividade.setProjeto(atividadeAtualizada.getProjeto());
             atividade.setNome(atividadeAtualizada.getNome());
             atividade.setDescricao(atividadeAtualizada.getDescricao());
             atividade.setData_inicio(atividadeAtualizada.getData_inicio());
             atividade.setData_fim(atividadeAtualizada.getData_fim());
             atividade.setStatus(atividadeAtualizada.getStatus());
-            atividade.setId_usuario_responsavel(atividadeAtualizada.getId_usuario_responsavel());
+            atividade.setUsuarioResponsavel(atividadeAtualizada.getUsuarioResponsavel());
             return atividadesRepository.save(atividade);
         }).orElseThrow(() -> new RuntimeException("Atividade não encontrada com ID: " + id));
 
@@ -67,9 +68,9 @@ public class AtividadeService {
 
     }
 
-    public List<Atividade> findByUsuarioResponsavel(Long id_usuario_responsavel) {
+    public List<Atividade> findByUsuarioResponsavel(Usuario usuarioResponsavel) {
 
-        return atividadesRepository.findByIdUsuarioResponsavel(id_usuario_responsavel);
+        return atividadesRepository.findByIdUsuarioResponsavel(usuarioResponsavel);
 
     }
 
