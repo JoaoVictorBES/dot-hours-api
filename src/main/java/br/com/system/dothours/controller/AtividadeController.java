@@ -25,7 +25,7 @@ public class AtividadeController {
     @Autowired
     private AtividadeService atividadeService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Atividade> create(@RequestBody Atividade atividade) {
 
         Atividade novaAtividade = atividadeService.create(atividade);
@@ -33,7 +33,7 @@ public class AtividadeController {
 
     }
 
-    @GetMapping
+    @GetMapping("/findAll")
     public ResponseEntity<List<Atividade>> findAll() {
 
         List<Atividade> atividades = atividadeService.findAll();

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.model.Atividade;
+import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.AtividadeRepository;
 
@@ -64,13 +65,15 @@ public class AtividadeService {
 
     public List<Atividade> findByProjeto(Long id_projeto) {
 
-        return atividadesRepository.findByIdProjeto(id_projeto);
+        Projeto projeto = new Projeto();
+        projeto.setId(id_projeto); // Certifique-se de que o ID foi setado
+        return atividadesRepository.findByProjeto(projeto);
 
     }
 
     public List<Atividade> findByUsuarioResponsavel(Usuario usuarioResponsavel) {
 
-        return atividadesRepository.findByIdUsuarioResponsavel(usuarioResponsavel);
+        return atividadesRepository.findByUsuarioResponsavel(usuarioResponsavel);
 
     }
 

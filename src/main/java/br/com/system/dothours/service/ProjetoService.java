@@ -49,7 +49,14 @@ public class ProjetoService {
 
     }
 
-    
+     /**
+         * Atualiza um projeto existente com novos dados.
+         *
+         * @param id O ID do projeto a ser atualizado.
+         * @param projetoAtualizado Objeto contendo as novas informações do projeto.
+         * @return O projeto atualizado salvo no banco de dados.
+         * @throws RuntimeException Se o projeto com o ID fornecido não for encontrado.
+     **/
     public Projeto update(Long id, Projeto projetoAtualizado) {
 
         return projetoRepository.findById(id).map(projeto -> {

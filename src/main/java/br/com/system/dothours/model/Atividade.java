@@ -33,7 +33,7 @@ public class Atividade {
     private String status;
     
     @ManyToOne
-    @JoinColumn(name = "id_usuario_responsavel", nullable = false)
+    @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
     private Usuario usuarioResponsavel;
     
     private LocalDate data_criacao;

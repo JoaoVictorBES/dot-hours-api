@@ -106,6 +106,14 @@ public class Usuario {
         this.role = role;
     }
 
+    public List<Atividade> getAtividades() {
+        return atividades;
+    }
+
+    public void setAtividades(List<Atividade> atividades) {
+        this.atividades = atividades;
+    }
+
     
 
 }
