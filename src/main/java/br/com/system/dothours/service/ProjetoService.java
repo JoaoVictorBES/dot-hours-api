@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.ProjetoRepository;
@@ -83,5 +84,24 @@ public class ProjetoService {
         }
 
     }
+
+
+    public Projeto salvarProjeto(ProjetoDTO projetoDTO) {
+        Usuario usuario = usuarioRepository.findById(projetoDTO.getId_usuario_responsavel())
+                            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        Projeto projeto = new Projeto();
+        projeto.setNome(projetoDTO.getNome());
+        projeto.setDescricao(projetoDTO.getDescricao());
+        projeto.setData_inicio(projetoDTO.getData_inicio());
+        projeto.setData_fim(projetoDTO.getData_fim());
+        projeto.setStatus(projetoDTO.getStatus());
+        projeto.setId_usuario_responsavel(usuario);
+        projeto.setData_criacao(projetoDTO.getData_criacao());
+        projeto.setPrioridade(projetoDTO.getPrioridade());
+
+        return projetoRepository.save(projeto);
+    }
+
 
 }

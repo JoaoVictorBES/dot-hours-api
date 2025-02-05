@@ -27,7 +27,7 @@ public class ProjetoController {
     private ProjetoService projetoService;
 
     
-    @PostMapping ("/ceate/projeto")
+    @PostMapping ("/create")
     public ResponseEntity<?> criarProjeto(@RequestBody Projeto projeto, @RequestParam Long usuarioId) {
 
         try {
