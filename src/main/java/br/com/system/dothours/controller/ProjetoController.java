@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.service.ProjetoService;
 
@@ -28,13 +28,13 @@ public class ProjetoController {
 
     
     @PostMapping ("/create")
-    public ResponseEntity<?> criarProjeto(@RequestBody Projeto projeto, @RequestParam Long usuarioId) {
+    public ResponseEntity<?> criarProjeto(@RequestBody ProjetoDTO projetoDTO) {
 
         try {
-            Projeto novoProjeto = projetoService.create(projeto, usuarioId);
+            Projeto novoProjeto = projetoService.create(projetoDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(novoProjeto);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }

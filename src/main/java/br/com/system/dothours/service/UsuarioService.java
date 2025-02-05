@@ -1,11 +1,15 @@
 package br.com.system.dothours.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.system.dothours.dto.UsuarioCriadoDTO;
+import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.UsuarioRepository;
 
@@ -13,52 +17,48 @@ import br.com.system.dothours.repository.UsuarioRepository;
 public class UsuarioService {
 
     @Autowired
-    public UsuarioRepository usuariosRepository;
+    private UsuarioRepository usuarioRepository;
 
-    public Usuario create(Usuario usuario) {
+    public UsuarioDTO create(UsuarioCriadoDTO usuarioCreateDTO) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(usuarioCreateDTO.getNome());
+        usuario.setEmail(usuarioCreateDTO.getEmail());
+        usuario.setSenha(usuarioCreateDTO.getSenha()); // Idealmente, você deve criptografar a senha antes de salvar
+        usuario.setRole(usuarioCreateDTO.getRole());
+        usuario.setData_criaçao(LocalDate.now());
 
-        return usuariosRepository.save(usuario);
-
+        usuario = usuarioRepository.save(usuario);
+        return UsuarioDTO.fromEntity(usuario);
     }
 
-    public List<Usuario> findAll() {
-
-        return usuariosRepository.findAll();
-
+    public List<UsuarioDTO> findAll() {
+        return usuarioRepository.findAll()
+                                .stream()
+                                .map(UsuarioDTO::fromEntity)
+                                .collect(Collectors.toList());
     }
 
-    public Optional<Usuario> findById(Long id) {
-
-        return usuariosRepository.findById(id);
-
+    public Optional<UsuarioDTO> findById(Long id) {
+        return usuarioRepository.findById(id).map(UsuarioDTO::fromEntity);
     }
 
-    public Usuario update(Long id, Usuario usuarioAtualizado) {
+    public UsuarioDTO update(Long id, UsuarioCriadoDTO usuarioCreateDTO) {
+        return usuarioRepository.findById(id).map(usuario -> {
+            usuario.setNome(usuarioCreateDTO.getNome());
+            usuario.setEmail(usuarioCreateDTO.getEmail());
+            usuario.setSenha(usuarioCreateDTO.getSenha());
+            usuario.setRole(usuarioCreateDTO.getRole());
 
-        return usuariosRepository.findById(id).map(usuario -> {
-
-            usuario.setNome(usuarioAtualizado.getNome());
-            usuario.setEmail(usuarioAtualizado.getEmail());
-            usuario.setSenha(usuarioAtualizado.getSenha());
-            
-            return usuariosRepository.save(usuario);
-
+            usuarioRepository.save(usuario);
+            return UsuarioDTO.fromEntity(usuario);
         }).orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
-
     }
 
     public void delete(Long id) {
-
-        if (usuariosRepository.existsById(id)) {
-
-            usuariosRepository.deleteById(id);
-
-        } else {
-
+        if (!usuarioRepository.existsById(id)) {
             throw new RuntimeException("Usuário não encontrado com ID: " + id);
-
         }
-
+        usuarioRepository.deleteById(id);
     }
 
 }

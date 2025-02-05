@@ -86,9 +86,9 @@ public class ProjetoService {
     }
 
 
-    public Projeto salvarProjeto(ProjetoDTO projetoDTO) {
+    public Projeto create(ProjetoDTO projetoDTO) {
         Usuario usuario = usuarioRepository.findById(projetoDTO.getId_usuario_responsavel())
-                            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         Projeto projeto = new Projeto();
         projeto.setNome(projetoDTO.getNome());
@@ -96,7 +96,7 @@ public class ProjetoService {
         projeto.setData_inicio(projetoDTO.getData_inicio());
         projeto.setData_fim(projetoDTO.getData_fim());
         projeto.setStatus(projetoDTO.getStatus());
-        projeto.setId_usuario_responsavel(usuario);
+        projeto.setId_usuario_responsavel(usuario.getId()); 
         projeto.setData_criacao(projetoDTO.getData_criacao());
         projeto.setPrioridade(projetoDTO.getPrioridade());
 
