@@ -1,6 +1,6 @@
 package br.com.system.dothours.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    private LocalDate data_criaçao;
-    private LocalDate ultimo_login;
+    private LocalDateTime dataCriaçao;
+    private LocalDateTime ultimoLogin;
     private String role;
 
     @ManyToMany
@@ -40,13 +40,13 @@ public class Usuario {
         
     }
 
-    public Usuario(Long id, String nome, String email, String senha, LocalDate data_criaçao, LocalDate ultimo_login, String role) {
+    public Usuario(Long id, String nome, String email, String senha, LocalDateTime dataCriaçao, LocalDateTime ultimoLogin, String role) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.data_criaçao = data_criaçao;
-        this.ultimo_login = ultimo_login;
+        this.dataCriaçao = dataCriaçao;
+        this.ultimoLogin = ultimoLogin;
         this.role = role;
     }
 
@@ -82,20 +82,20 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public LocalDate getData_criaçao() {
-        return data_criaçao;
+    public LocalDateTime getDataCriaçao() {
+        return dataCriaçao;
     }
 
-    public void setData_criaçao(LocalDate data_criaçao) {
-        this.data_criaçao = data_criaçao;
+    public void setDataCriaçao(LocalDateTime dataCriaçao) {
+        this.dataCriaçao = dataCriaçao;
     }
 
-    public LocalDate getUltimo_login() {
-        return ultimo_login;
+    public LocalDateTime getUltimoLogin() {
+        return ultimoLogin;
     }
 
-    public void setUltimo_login(LocalDate ultimo_login) {
-        this.ultimo_login = ultimo_login;
+    public void setUltimoLogin(LocalDateTime ultimoLogin) {
+        this.ultimoLogin = ultimoLogin;
     }
 
     public String getRole() {

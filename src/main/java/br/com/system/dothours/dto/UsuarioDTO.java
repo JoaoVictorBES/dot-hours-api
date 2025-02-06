@@ -1,6 +1,6 @@
 package br.com.system.dothours.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import br.com.system.dothours.model.Usuario;
 
@@ -9,11 +9,11 @@ public class UsuarioDTO {
     private Long id;
     private String nome;
     private String email;
-    private LocalDate dataCriacao;
-    private LocalDate ultimoLogin;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime ultimoLogin;
     private String role;
 
-    public UsuarioDTO(Long id, String nome, String email, LocalDate dataCriacao, LocalDate ultimoLogin, String role) {
+    public UsuarioDTO(Long id, String nome, String email, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, String role) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -27,8 +27,8 @@ public class UsuarioDTO {
             usuario.getId(),
             usuario.getNome(),
             usuario.getEmail(),
-            usuario.getData_criaçao(),
-            usuario.getUltimo_login(),
+            usuario.getDataCriaçao(),
+            usuario.getUltimoLogin(),
             usuario.getRole()
         );
     }
@@ -57,19 +57,19 @@ public class UsuarioDTO {
         this.email = email;
     }
 
-    public LocalDate getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDate dataCriacao) {
+    public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public LocalDate getUltimoLogin() {
+    public LocalDateTime getUltimoLogin() {
         return ultimoLogin;
     }
 
-    public void setUltimoLogin(LocalDate ultimoLogin) {
+    public void setUltimoLogin(LocalDateTime ultimoLogin) {
         this.ultimoLogin = ultimoLogin;
     }
 

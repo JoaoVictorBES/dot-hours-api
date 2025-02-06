@@ -17,6 +17,14 @@ public class LancamentoHorasService {
     private LancamentoHorasRepository lancamentoHorasRepository;
 
     
+
+      /**
+     * Cria um novo registro de lançamento de horas.
+     * A data de registro é automaticamente definida para o momento atual.
+     *
+     * @param lancamentoHoras Objeto {@link LancamentoHoras} contendo os detalhes do lançamento.
+     * @return {@link LancamentoHoras} salvo no banco de dados.
+     */
     public LancamentoHoras create(LancamentoHoras lancamentoHoras) {
 
         lancamentoHoras.setDataRegistro(LocalDateTime.now()); 
@@ -25,6 +33,12 @@ public class LancamentoHorasService {
     }
 
     
+
+     /**
+     * Retorna todos os lançamentos de horas cadastrados.
+     *
+     * @return Lista de {@link LancamentoHoras}.
+     */
     public List<LancamentoHoras> findAll() {
 
         return lancamentoHorasRepository.findAll();
@@ -32,6 +46,13 @@ public class LancamentoHorasService {
     }
 
     
+
+    /**
+     * Busca um lançamento de horas pelo seu ID.
+     *
+     * @param id ID do lançamento de horas a ser buscado.
+     * @return {@link Optional} contendo {@link LancamentoHoras}, se encontrado.
+     */
     public Optional<LancamentoHoras> findById(Long id) {
 
         return lancamentoHorasRepository.findById(id);
@@ -39,6 +60,15 @@ public class LancamentoHorasService {
     }
 
     
+
+     /**
+     * Atualiza um lançamento de horas existente com novos dados.
+     *
+     * @param id ID do lançamento de horas a ser atualizado.
+     * @param lancamentoAtualizado Objeto contendo as novas informações do lançamento.
+     * @return {@link LancamentoHoras} atualizado e salvo no banco de dados.
+     * @throws RuntimeException Se o lançamento de horas com o ID fornecido não for encontrado.
+     */
     public LancamentoHoras update(Long id, LancamentoHoras lancamentoAtualizado) {
 
         return lancamentoHorasRepository.findById(id).map(lancamento -> {
@@ -53,6 +83,12 @@ public class LancamentoHorasService {
     }
 
     
+    /**
+     * Exclui um lançamento de horas pelo seu ID.
+     *
+     * @param id ID do lançamento de horas a ser removido.
+     * @throws RuntimeException Se o lançamento de horas não for encontrado.
+     */
     public void delete(Long id) {
 
         if (lancamentoHorasRepository.existsById(id)) {

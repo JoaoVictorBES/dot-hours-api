@@ -1,6 +1,5 @@
 package br.com.system.dothours.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,14 @@ public class ProjetoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+
+     /**
+     * Cria um novo projeto associado a um usuário responsável.
+     *
+     * @param projetoDTO Objeto DTO contendo os dados do projeto a ser criado.
+     * @return {@link ProjetoDTO} representando o projeto criado.
+     * @throws RuntimeException Se o usuário responsável pelo projeto não for encontrado.
+     */
     public ProjetoDTO create(ProjetoDTO projetoDTO) {
         Usuario usuario = usuarioRepository.findById(projetoDTO.getIdUsuarioResponsavel())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -46,18 +53,32 @@ public class ProjetoService {
 
 
     
+     /**
+     * Retorna uma lista de todos os projetos cadastrados.
+     *
+     * @return Lista de {@link ProjetoDTO}.
+     */
     public List<ProjetoDTO> findAll() {
 
         return projetoRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
 
     }
 
-   
+
+
+     /**
+     * Busca um projeto pelo seu ID.
+     *
+     * @param id ID do projeto a ser buscado.
+     * @return {@link Optional} contendo {@link ProjetoDTO}, se encontrado.
+     */
     public Optional<ProjetoDTO> findById(Long id) {
 
         return projetoRepository.findById(id).map(this::convertToDTO);
 
     }
+
+
 
      /**
          * Atualiza um projeto existente com novos dados.
@@ -86,6 +107,13 @@ public class ProjetoService {
     }
 
     
+
+     /**
+     * Exclui um projeto pelo seu ID.
+     *
+     * @param id ID do projeto a ser removido.
+     * @throws RuntimeException Se o projeto não for encontrado.
+     */
     public void delete(Long id) {
         
         if (projetoRepository.existsById(id)) {
@@ -97,6 +125,13 @@ public class ProjetoService {
     }
 
 
+    
+     /**
+     * Converte uma entidade {@link Projeto} para um DTO {@link ProjetoDTO}.
+     *
+     * @param projeto Objeto {@link Projeto} a ser convertido.
+     * @return Objeto {@link ProjetoDTO} convertido.
+     */
     private ProjetoDTO convertToDTO(Projeto projeto) {
 
         ProjetoDTO projetoDTO = new ProjetoDTO();
