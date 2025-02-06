@@ -3,6 +3,7 @@ package br.com.system.dothours.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,37 +17,44 @@ import br.com.system.dothours.repository.UsuarioRepository;
 @Service
 public class ProjetoService {
 
+   
+
     @Autowired
     private ProjetoRepository projetoRepository;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    
-    public Projeto create(Projeto projeto, Long usuarioResponsavelId) {
-        
-        Usuario usuarioResponsavel = usuarioRepository.findById(usuarioResponsavelId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + usuarioResponsavelId));
+    public ProjetoDTO create(ProjetoDTO projetoDTO) {
+        Usuario usuario = usuarioRepository.findById(projetoDTO.getId_usuario_responsavel())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
+        Projeto projeto = new Projeto();
+        projeto.setNome(projetoDTO.getNome());
+        projeto.setDescricao(projetoDTO.getDescricao());
+        projeto.setData_inicio(projetoDTO.getData_inicio());
+        projeto.setData_fim(projetoDTO.getData_fim());
+        projeto.setStatus(projetoDTO.getStatus());
+        projeto.setUsuarioResponsavel(usuario);
+        projeto.setData_criacao(LocalDate.now());
+        projeto.setPrioridade(projetoDTO.getPrioridade());
 
-        projeto.setId_usuario_responsavel(usuarioResponsavelId);
-        projeto.setData_criacao(LocalDate.now()); 
-
-        return projetoRepository.save(projeto);
-
+        Projeto projetoSalvo = projetoRepository.save(projeto);
+        return convertToDTO(projetoSalvo);
     }
 
-    
-    public List<Projeto> findAll() {
 
-        return projetoRepository.findAll();
+    
+    public List<ProjetoDTO> findAll() {
+
+        return projetoRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
 
     }
 
    
-    public Optional<Projeto> findById(Long id) {
+    public Optional<ProjetoDTO> findById(Long id) {
 
-        return projetoRepository.findById(id);
+        return projetoRepository.findById(id).map(this::convertToDTO);
 
     }
 
@@ -54,23 +62,25 @@ public class ProjetoService {
          * Atualiza um projeto existente com novos dados.
          *
          * @param id O ID do projeto a ser atualizado.
-         * @param projetoAtualizado Objeto contendo as novas informações do projeto.
+         * @param projetoDTO Objeto contendo as novas informações do projeto.
          * @return O projeto atualizado salvo no banco de dados.
          * @throws RuntimeException Se o projeto com o ID fornecido não for encontrado.
      **/
-    public Projeto update(Long id, Projeto projetoAtualizado) {
+    public ProjetoDTO update(Long id, ProjetoDTO projetoDTO) {
 
-        return projetoRepository.findById(id).map(projeto -> {
-            projeto.setNome(projetoAtualizado.getNome());
-            projeto.setDescricao(projetoAtualizado.getDescricao());
-            projeto.setData_inicio(projetoAtualizado.getData_inicio());
-            projeto.setData_fim(projetoAtualizado.getData_fim());
-            projeto.setStatus(projetoAtualizado.getStatus());
-            projeto.setPrioridade(projetoAtualizado.getPrioridade());
-            projeto.setId_usuario_responsavel(projetoAtualizado.getId_usuario_responsavel());
+        Projeto projetoAtualizado = projetoRepository.findById(id).map(projeto -> {
+            projeto.setNome(projetoDTO.getNome());
+            projeto.setDescricao(projetoDTO.getDescricao());
+            projeto.setData_inicio(projetoDTO.getData_inicio());
+            projeto.setData_fim(projetoDTO.getData_fim());
+            projeto.setStatus(projetoDTO.getStatus());
+            projeto.setPrioridade(projetoDTO.getPrioridade());
+            projeto.setId_usuario_responsavel(projetoDTO.getId_usuario_responsavel());
 
             return projetoRepository.save(projeto);
         }).orElseThrow(() -> new RuntimeException("Projeto não encontrado com ID: " + id));
+
+        return convertToDTO(projetoAtualizado);
 
     }
 
@@ -86,22 +96,19 @@ public class ProjetoService {
     }
 
 
-    public Projeto create(ProjetoDTO projetoDTO) {
-        Usuario usuario = usuarioRepository.findById(projetoDTO.getId_usuario_responsavel())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    private ProjetoDTO convertToDTO(Projeto projeto) {
 
-        Projeto projeto = new Projeto();
-        projeto.setNome(projetoDTO.getNome());
-        projeto.setDescricao(projetoDTO.getDescricao());
-        projeto.setData_inicio(projetoDTO.getData_inicio());
-        projeto.setData_fim(projetoDTO.getData_fim());
-        projeto.setStatus(projetoDTO.getStatus());
-        projeto.setId_usuario_responsavel(usuario.getId()); 
-        projeto.setData_criacao(projetoDTO.getData_criacao());
-        projeto.setPrioridade(projetoDTO.getPrioridade());
+        ProjetoDTO projetoDTO = new ProjetoDTO();
+        projetoDTO.setId(projeto.getId());
+        projetoDTO.setNome(projeto.getNome());
+        projetoDTO.setDescricao(projeto.getDescricao());
+        projetoDTO.setData_inicio(projeto.getData_inicio());
+        projetoDTO.setData_fim(projeto.getData_fim());
+        projetoDTO.setStatus(projeto.getStatus());
+        projetoDTO.setPrioridade(projeto.getPrioridade());
+        projetoDTO.setId_usuario_responsavel(projeto.getUsuarioResponsavel().getId());
+        return projetoDTO;
 
-        return projetoRepository.save(projeto);
     }
-
 
 }

@@ -1,12 +1,14 @@
 package br.com.system.dothours.service;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
@@ -15,65 +17,78 @@ import br.com.system.dothours.repository.AtividadeRepository;
 @Service
 public class AtividadeService {
 
-    @Autowired
+   @Autowired
     private AtividadeRepository atividadesRepository;
 
-    
-    public Atividade create(Atividade atividade) {
-
-        atividade.setData_criacao(LocalDate.now()); 
-        return atividadesRepository.save(atividade);
-
+    public AtividadeDTO create(AtividadeDTO atividadeDTO) {
+        Atividade atividade = new Atividade();
+        atividade.setNome(atividadeDTO.getNome());
+        atividade.setDescricao(atividadeDTO.getDescricao());
+        atividade.setDataInicio(atividadeDTO.getDataInicio());
+        atividade.setDataFim(atividadeDTO.getDataFim());
+        atividade.setStatus(atividadeDTO.getStatus());
+        atividade.setDataCriacao(LocalDateTime.now());
+        Atividade atividadeSalva = atividadesRepository.save(atividade);
+        return convertToDTO(atividadeSalva);
     }
 
-    public List<Atividade> findAll() {
-
-        return atividadesRepository.findAll();
-
+    public List<AtividadeDTO> findAll() {
+        return atividadesRepository.findAll().stream().map(this::convertToDTO).toList();
     }
 
-    public Optional<Atividade> findById(Long id) {
-
-        return atividadesRepository.findById(id);
-
+    public Optional<AtividadeDTO> findById(Long id) {
+        return atividadesRepository.findById(id).map(this::convertToDTO);
     }
 
-    public Atividade update(Long id, Atividade atividadeAtualizada) {
-
+    public AtividadeDTO update(Long id, AtividadeDTO atividadeDTO) {
         return atividadesRepository.findById(id).map(atividade -> {
-            atividade.setProjeto(atividadeAtualizada.getProjeto());
-            atividade.setNome(atividadeAtualizada.getNome());
-            atividade.setDescricao(atividadeAtualizada.getDescricao());
-            atividade.setData_inicio(atividadeAtualizada.getData_inicio());
-            atividade.setData_fim(atividadeAtualizada.getData_fim());
-            atividade.setStatus(atividadeAtualizada.getStatus());
-            atividade.setUsuarioResponsavel(atividadeAtualizada.getUsuarioResponsavel());
-            return atividadesRepository.save(atividade);
+            atividade.setNome(atividadeDTO.getNome());
+            atividade.setDescricao(atividadeDTO.getDescricao());
+            atividade.setDataInicio(atividadeDTO.getDataInicio());
+            atividade.setDataFim(atividadeDTO.getDataFim());
+            atividade.setStatus(atividadeDTO.getStatus());
+            Atividade updatedAtividade = atividadesRepository.save(atividade);
+            return convertToDTO(updatedAtividade);
         }).orElseThrow(() -> new RuntimeException("Atividade não encontrada com ID: " + id));
-
     }
 
     public void delete(Long id) {
-
         if (atividadesRepository.existsById(id)) {
             atividadesRepository.deleteById(id);
         } else {
             throw new RuntimeException("Atividade não encontrada com ID: " + id);
         }
-
     }
 
-    public List<Atividade> findByProjeto(Long id_projeto) {
-
-        Projeto projeto = new Projeto();
-        projeto.setId(id_projeto); // Certifique-se de que o ID foi setado
-        return atividadesRepository.findByProjeto(projeto);
-
+    private AtividadeDTO convertToDTO(Atividade atividade) {
+        return new AtividadeDTO(
+                atividade.getId(),
+                atividade.getNome(),
+                atividade.getDescricao(),
+                atividade.getDataInicio(),
+                atividade.getDataFim(),
+                atividade.getStatus(),
+                atividade.getProjeto().getId(),
+                atividade.getUsuarioResponsavel().getId(),
+                atividade.getDataCriacao()
+        );
     }
 
-    public List<Atividade> findByUsuarioResponsavel(Usuario usuarioResponsavel) {
+    public List<AtividadeDTO> findByProjeto(Projeto id_projeto) {
+        return atividadesRepository.findByProjeto(id_projeto)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
 
-        return atividadesRepository.findByUsuarioResponsavel(usuarioResponsavel);
+    public List<AtividadeDTO> findByUsuarioResponsavel(Long usuarioResponsavel) {
+        
+        Usuario usuario = new Usuario();
+        usuario.setId(usuarioResponsavel);
+        return atividadesRepository.findByUsuarioResponsavel(usuario)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
 
     }
 

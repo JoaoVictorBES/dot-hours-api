@@ -1,6 +1,5 @@
 package br.com.system.dothours.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +27,15 @@ public class Atividade {
 
     private String nome;
     private String descricao;
-    private LocalDateTime data_inicio;
-    private LocalDateTime data_fim;
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
     private String status;
     
     @ManyToOne
     @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
     private Usuario usuarioResponsavel;
     
-    private LocalDate data_criacao;
+    private LocalDateTime dataCriacao;
 
     @ManyToMany(mappedBy = "atividades")
     private List<Usuario> usuarios = new ArrayList<>();
@@ -46,16 +45,16 @@ public class Atividade {
         
     }
 
-    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, String status, Usuario usuarioResponsavel, LocalDate data_criacao) {
+    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, String status, Usuario usuarioResponsavel, LocalDateTime dataCriacao) {
         this.id = id;
         this.projeto = projeto;
         this.nome = nome;
         this.descricao = descricao;
-        this.data_inicio = data_inicio;
-        this.data_fim = data_fim;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
         this.status = status;
         this.usuarioResponsavel = usuarioResponsavel;
-        this.data_criacao = data_criacao;
+        this.dataCriacao = dataCriacao;
     }
 
     public Long getId() {
@@ -90,20 +89,20 @@ public class Atividade {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getData_inicio() {
-        return data_inicio;
+    public LocalDateTime getDataInicio() {
+        return dataInicio;
     }
 
-    public void setData_inicio(LocalDateTime data_inicio) {
-        this.data_inicio = data_inicio;
+    public void setDataInicio(LocalDateTime dataInicio) {
+        this.dataInicio = dataInicio;
     }
 
-    public LocalDateTime getData_fim() {
-        return data_fim;
+    public LocalDateTime getDataFim() {
+        return dataFim;
     }
 
-    public void setData_fim(LocalDateTime data_fim) {
-        this.data_fim = data_fim;
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
     }
 
     public String getStatus() {
@@ -122,13 +121,6 @@ public class Atividade {
         this.usuarioResponsavel = usuarioResponsavel;
     }
 
-    public LocalDate getData_criacao() {
-        return data_criacao;
-    }
-
-    public void setData_criacao(LocalDate data_criacao) {
-        this.data_criacao = data_criacao;
-    }
 
     public List<Usuario> getUsuarios() {
         return usuarios;
@@ -136,6 +128,19 @@ public class Atividade {
 
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Object getPrioridade() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPrioridade'");
     }
 
     

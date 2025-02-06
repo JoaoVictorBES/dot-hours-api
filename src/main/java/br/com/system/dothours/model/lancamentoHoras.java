@@ -2,6 +2,7 @@ package br.com.system.dothours.model;
 
 import java.time.LocalDateTime;
 
+import br.com.system.dothours.dto.LancamentoHorasDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,24 +28,37 @@ public class LancamentoHoras {
     private Usuario usuario;
 
     private String descricao;
-    private LocalDateTime data_inicio;
-    private LocalDateTime data_fim;
-    private LocalDateTime data_registro;
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
+    private LocalDateTime dataRegistro;
 
 
     public LancamentoHoras() {
 
     }
 
-    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalDateTime data_inicio, LocalDateTime data_fim, LocalDateTime data_registro) {
+    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, LocalDateTime dataRegistro) {
         this.id = id;
         this.atividade = atividade;
         this.usuario = usuario;
         this.descricao = descricao;
-        this.data_inicio = data_inicio;
-        this.data_fim = data_fim;
-        this.data_registro = data_registro;
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.dataRegistro = dataRegistro;
     }
+
+    public static LancamentoHoras fromDTO(LancamentoHorasDTO dto) {
+        LancamentoHoras lancamentoHoras = new LancamentoHoras();
+        lancamentoHoras.setId(dto.getId());
+        lancamentoHoras.setAtividade(dto.getAtividade());
+        lancamentoHoras.setUsuario(dto.getUsuario());
+        lancamentoHoras.setDescricao(dto.getDescricao());
+        lancamentoHoras.setDataInicio(dto.getDataInicio());
+        lancamentoHoras.setDataFim(dto.getDataFim());
+        lancamentoHoras.setDataRegistro(dto.getDataRegistro());
+        return lancamentoHoras;
+    }
+
 
     public Long getId() {
         return id;
@@ -78,28 +92,28 @@ public class LancamentoHoras {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getData_inicio() {
-        return data_inicio;
+    public LocalDateTime getDataInicio() {
+        return dataInicio;
     }
 
-    public void setData_inicio(LocalDateTime data_inicio) {
-        this.data_inicio = data_inicio;
+    public void setDataInicio(LocalDateTime dataInicio) {
+        this.dataInicio = dataInicio;
     }
 
-    public LocalDateTime getData_fim() {
-        return data_fim;
+    public LocalDateTime getDataFim() {
+        return dataFim;
     }
 
-    public void setData_fim(LocalDateTime data_fim) {
-        this.data_fim = data_fim;
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
     }
 
-    public LocalDateTime getData_registro() {
-        return data_registro;
+    public LocalDateTime getDataRegistro() {
+        return dataRegistro;
     }
 
-    public void setData_registro(LocalDateTime data_registro) {
-        this.data_registro = data_registro;
+    public void setDataRegistro(LocalDateTime dataRegistro) {
+        this.dataRegistro = dataRegistro;
     }
 
 }

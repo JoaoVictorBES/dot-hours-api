@@ -19,7 +19,7 @@ public class LancamentoHorasService {
     
     public LancamentoHoras create(LancamentoHoras lancamentoHoras) {
 
-        lancamentoHoras.setData_registro(LocalDateTime.now()); 
+        lancamentoHoras.setDataRegistro(LocalDateTime.now()); 
         return lancamentoHorasRepository.save(lancamentoHoras);
 
     }
@@ -45,8 +45,8 @@ public class LancamentoHorasService {
             lancamento.setAtividade(lancamentoAtualizado.getAtividade());
             lancamento.setUsuario(lancamentoAtualizado.getUsuario());
             lancamento.setDescricao(lancamentoAtualizado.getDescricao());
-            lancamento.setData_inicio(lancamentoAtualizado.getData_inicio());
-            lancamento.setData_fim(lancamentoAtualizado.getData_fim());
+            lancamento.setDataInicio(lancamentoAtualizado.getDataInicio());
+            lancamento.setDataFim(lancamentoAtualizado.getDataFim());
             return lancamentoHorasRepository.save(lancamento);
         }).orElseThrow(() -> new RuntimeException("Lançamento de horas não encontrado com ID: " + id));
 

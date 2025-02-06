@@ -2,6 +2,7 @@ package br.com.system.dothours.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.system.dothours.dto.LancamentoHorasDTO;
 import br.com.system.dothours.model.LancamentoHoras;
 import br.com.system.dothours.service.LancamentoHorasService;
 
@@ -25,23 +27,28 @@ public class LancamentoHorasController {
     @Autowired
     private LancamentoHorasService lancamentoHorasService;
 
-    @PostMapping("/criar")
-    public ResponseEntity<?> criarLancamento(@RequestBody LancamentoHoras lancamentoHoras) {
-
+    @PostMapping("/create")
+    public ResponseEntity<LancamentoHorasDTO> criarLancamento(@RequestBody LancamentoHorasDTO lancamentoHorasDTO) {
         try {
+            // Convertendo DTO para a entidade
+            LancamentoHoras lancamentoHoras = LancamentoHoras.fromDTO(lancamentoHorasDTO);
             LancamentoHoras novoLancamento = lancamentoHorasService.create(lancamentoHoras);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoLancamento);
+            // Convertendo a entidade de volta para DTO para a resposta
+            LancamentoHorasDTO novoLancamentoDTO = LancamentoHorasDTO.fromEntity(novoLancamento);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoLancamentoDTO);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LancamentoHorasDTO(e.getMessage()));
         }
-
     }
 
-    @GetMapping ("/listAll")
-    public ResponseEntity<List<LancamentoHoras>> listarLancamentos() {
+    @GetMapping ("/findAll")
+    public ResponseEntity<List<LancamentoHorasDTO>> listarLancamentos() {
 
         List<LancamentoHoras> lancamentos = lancamentoHorasService.findAll();
-        return ResponseEntity.ok(lancamentos);
+        List<LancamentoHorasDTO> lancamentosDTO = lancamentos.stream()
+            .map(LancamentoHorasDTO::fromEntity)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(lancamentosDTO);
 
     }
 
@@ -49,24 +56,22 @@ public class LancamentoHorasController {
     public ResponseEntity<?> buscarLancamentoPorId(@PathVariable Long id) {
 
         Optional<LancamentoHoras> lancamento = lancamentoHorasService.findById(id);
-        if (lancamento.isPresent()) {
-            return ResponseEntity.ok(lancamento.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("Lançamento de horas não encontrado com ID: " + id);
-        }
+        return lancamento.map(l -> ResponseEntity.ok(LancamentoHorasDTO.fromEntity(l)))
+                         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                                        .body(new LancamentoHorasDTO("Lançamento de horas não encontrado com ID: " + id)));
 
     }
 
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> atualizarLancamento(@PathVariable Long id, @RequestBody LancamentoHoras lancamentoAtualizado) {
+    public ResponseEntity<?> atualizarLancamento(@PathVariable Long id, @RequestBody LancamentoHorasDTO lancamentoAtualizadoDTO) {
 
         try {
-            LancamentoHoras atualizado = lancamentoHorasService.update(id, lancamentoAtualizado);
-            return ResponseEntity.ok(atualizado);
+            LancamentoHoras lancamentoAtualizado = LancamentoHoras.fromDTO(lancamentoAtualizadoDTO);
+            LancamentoHoras lancamento = lancamentoHorasService.update(id, lancamentoAtualizado);
+            return ResponseEntity.ok(LancamentoHorasDTO.fromEntity(lancamento));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new LancamentoHorasDTO(e.getMessage()));
         }
 
     }

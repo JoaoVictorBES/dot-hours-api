@@ -25,7 +25,7 @@ public class Projeto {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
-    private Usuario id_usuario_responsavel; 
+    private Usuario usuarioResponsavel; 
 
     private LocalDate data_criacao;
     private String prioridade;
@@ -40,7 +40,7 @@ public class Projeto {
         this.descricao = descricao;
         this.data_inicio = data_inicio;
         this.data_fim = data_fim;
-        this.id_usuario_responsavel = id_usuario_responsavel;
+        this.usuarioResponsavel = id_usuario_responsavel;
         this.data_criacao = data_criacao;
         this.prioridade = prioridade;
     }
@@ -86,13 +86,13 @@ public class Projeto {
     }
 
     public Long getId_usuario_responsavel() {
-        return id_usuario_responsavel != null ? id_usuario_responsavel.getId() : null;
+        return usuarioResponsavel != null ? usuarioResponsavel.getId() : null;
     }
 
-    public void setId_usuario_responsavel(Long id_usuario_responsavel) {
+     public void setId_usuario_responsavel(Long id_usuario_responsavel) {
         if (id_usuario_responsavel != null) {
-            this.id_usuario_responsavel = new Usuario();
-            this.id_usuario_responsavel.setId(id_usuario_responsavel);
+            this.usuarioResponsavel = new Usuario();
+            this.usuarioResponsavel.setId(id_usuario_responsavel);
         }
     }
 
@@ -118,6 +118,14 @@ public class Projeto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Usuario getUsuarioResponsavel() {
+        return usuarioResponsavel;
+    }
+
+    public void setUsuarioResponsavel(Usuario usuarioResponsavel) {
+        this.usuarioResponsavel = usuarioResponsavel;
     }
 
 }

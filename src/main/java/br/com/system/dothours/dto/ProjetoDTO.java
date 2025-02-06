@@ -2,8 +2,11 @@ package br.com.system.dothours.dto;
 
 import java.time.LocalDate;
 
+
+
 public class ProjetoDTO {
 
+    private Long id;
     private String nome;
     private String descricao;
     private LocalDate data_inicio;
@@ -61,6 +64,13 @@ public class ProjetoDTO {
         this.prioridade = prioridade;
     }
 
-    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+ 
 
 }

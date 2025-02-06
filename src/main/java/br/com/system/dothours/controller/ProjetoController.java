@@ -1,7 +1,6 @@
 package br.com.system.dothours.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.system.dothours.dto.ProjetoDTO;
-import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.service.ProjetoService;
 
 @RestController
@@ -31,8 +29,8 @@ public class ProjetoController {
     public ResponseEntity<?> criarProjeto(@RequestBody ProjetoDTO projetoDTO) {
 
         try {
-            Projeto novoProjeto = projetoService.create(projetoDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoProjeto);
+            ProjetoDTO novoProjetoDTO = projetoService.create(projetoDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoProjetoDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -40,35 +38,28 @@ public class ProjetoController {
     }
 
     @GetMapping("/listAll")
-    public ResponseEntity<List<Projeto>> listarProjetos() {
+    public ResponseEntity<List<ProjetoDTO>> listarProjetos() {
 
-        List<Projeto> projetos = projetoService.findAll();
+        List<ProjetoDTO> projetos = projetoService.findAll();
         return ResponseEntity.ok(projetos);
 
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<?> buscarProjetoPorId(@PathVariable Long id) {
-
-        Optional<Projeto> projeto = projetoService.findById(id);
-        if (projeto.isPresent()) {
-            return ResponseEntity.ok(projeto.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projeto não encontrado com ID: " + id);
-        }
-
+    public ResponseEntity<ProjetoDTO> buscarProjetoPorId(@PathVariable Long id) {
+        return projetoService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PutMapping("/update/projeto/{id}")
-    public ResponseEntity<?> atualizarProjeto(@PathVariable Long id, @RequestBody Projeto projetoAtualizado) {
-
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> atualizarProjeto(@PathVariable Long id, @RequestBody ProjetoDTO projetoDTO) {
         try {
-            Projeto projetoAtualizadoResponse = projetoService.update(id, projetoAtualizado);
-            return ResponseEntity.ok(projetoAtualizadoResponse);
+            ProjetoDTO projetoAtualizado = projetoService.update(id, projetoDTO);
+            return ResponseEntity.ok(projetoAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
     }
 
     @DeleteMapping("/delete/{id}")

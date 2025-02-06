@@ -6,6 +6,5 @@ import br.com.system.dothours.model.Projeto;
 
 public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
 
-    
 
 }
