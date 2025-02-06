@@ -1,6 +1,6 @@
 package br.com.system.dothours.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 
@@ -9,11 +9,11 @@ public class ProjetoDTO {
     private Long id;
     private String nome;
     private String descricao;
-    private LocalDate data_inicio;
-    private LocalDate data_fim;
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
     private String status;
-    private Long id_usuario_responsavel;  
-    private LocalDate data_criacao;
+    private Long idUsuarioResponsavel;  
+    private LocalDateTime dataCriacao;
     private String prioridade;
     public String getNome() {
         return nome;
@@ -27,17 +27,17 @@ public class ProjetoDTO {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    public LocalDate getData_inicio() {
-        return data_inicio;
+    public LocalDateTime getDataInicio() {
+        return dataInicio;
     }
-    public void setData_inicio(LocalDate data_inicio) {
-        this.data_inicio = data_inicio;
+    public void setDataInicio(LocalDateTime dataInicio) {
+        this.dataInicio = dataInicio;
     }
-    public LocalDate getData_fim() {
-        return data_fim;
+    public LocalDateTime getDataFim() {
+        return dataFim;
     }
-    public void setData_fim(LocalDate data_fim) {
-        this.data_fim = data_fim;
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
     }
     public String getStatus() {
         return status;
@@ -45,17 +45,17 @@ public class ProjetoDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-    public Long getId_usuario_responsavel() {
-        return id_usuario_responsavel;
+    public Long getIdUsuarioResponsavel() {
+        return idUsuarioResponsavel;
     }
-    public void setId_usuario_responsavel(Long id_usuario_responsavel) {
-        this.id_usuario_responsavel = id_usuario_responsavel;
+    public void setIdUsuarioResponsavel(Long idUsuarioResponsavel) {
+        this.idUsuarioResponsavel = idUsuarioResponsavel;
     }
-    public LocalDate getData_criacao() {
-        return data_criacao;
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
     }
-    public void setData_criacao(LocalDate data_criacao) {
-        this.data_criacao = data_criacao;
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
     public String getPrioridade() {
         return prioridade;

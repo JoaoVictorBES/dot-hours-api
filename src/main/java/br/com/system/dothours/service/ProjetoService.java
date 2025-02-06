@@ -1,6 +1,7 @@
 package br.com.system.dothours.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,17 +27,17 @@ public class ProjetoService {
     private UsuarioRepository usuarioRepository;
 
     public ProjetoDTO create(ProjetoDTO projetoDTO) {
-        Usuario usuario = usuarioRepository.findById(projetoDTO.getId_usuario_responsavel())
+        Usuario usuario = usuarioRepository.findById(projetoDTO.getIdUsuarioResponsavel())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         Projeto projeto = new Projeto();
         projeto.setNome(projetoDTO.getNome());
         projeto.setDescricao(projetoDTO.getDescricao());
-        projeto.setData_inicio(projetoDTO.getData_inicio());
-        projeto.setData_fim(projetoDTO.getData_fim());
+        projeto.setDataInicio(projetoDTO.getDataInicio());
+        projeto.setDataFim(projetoDTO.getDataFim());
         projeto.setStatus(projetoDTO.getStatus());
         projeto.setUsuarioResponsavel(usuario);
-        projeto.setData_criacao(LocalDate.now());
+        projeto.setDataCriacao(LocalDateTime.now());
         projeto.setPrioridade(projetoDTO.getPrioridade());
 
         Projeto projetoSalvo = projetoRepository.save(projeto);
@@ -71,11 +72,11 @@ public class ProjetoService {
         Projeto projetoAtualizado = projetoRepository.findById(id).map(projeto -> {
             projeto.setNome(projetoDTO.getNome());
             projeto.setDescricao(projetoDTO.getDescricao());
-            projeto.setData_inicio(projetoDTO.getData_inicio());
-            projeto.setData_fim(projetoDTO.getData_fim());
+            projeto.setDataInicio(projetoDTO.getDataInicio());
+            projeto.setDataFim(projetoDTO.getDataFim());
             projeto.setStatus(projetoDTO.getStatus());
             projeto.setPrioridade(projetoDTO.getPrioridade());
-            projeto.setId_usuario_responsavel(projetoDTO.getId_usuario_responsavel());
+            projeto.setIdUsuarioResponsavel(projetoDTO.getIdUsuarioResponsavel());
 
             return projetoRepository.save(projeto);
         }).orElseThrow(() -> new RuntimeException("Projeto não encontrado com ID: " + id));
@@ -102,11 +103,11 @@ public class ProjetoService {
         projetoDTO.setId(projeto.getId());
         projetoDTO.setNome(projeto.getNome());
         projetoDTO.setDescricao(projeto.getDescricao());
-        projetoDTO.setData_inicio(projeto.getData_inicio());
-        projetoDTO.setData_fim(projeto.getData_fim());
+        projetoDTO.setDataInicio(projeto.getDataInicio());
+        projetoDTO.setDataFim(projeto.getDataFim());
         projetoDTO.setStatus(projeto.getStatus());
         projetoDTO.setPrioridade(projeto.getPrioridade());
-        projetoDTO.setId_usuario_responsavel(projeto.getUsuarioResponsavel().getId());
+        projetoDTO.setIdUsuarioResponsavel(projeto.getUsuarioResponsavel().getId());
         return projetoDTO;
 
     }

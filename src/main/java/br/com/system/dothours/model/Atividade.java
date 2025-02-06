@@ -138,10 +138,7 @@ public class Atividade {
         this.dataCriacao = dataCriacao;
     }
 
-    public Object getPrioridade() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPrioridade'");
-    }
+    
 
     
 }
