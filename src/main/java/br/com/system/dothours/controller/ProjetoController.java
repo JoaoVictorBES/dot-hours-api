@@ -84,7 +84,7 @@ public class ProjetoController {
 
 
 
-    /**
+    /*
      * Atualiza um projeto com os dados fornecidos.
      *
      * @param id ID do projeto a ser atualizado.

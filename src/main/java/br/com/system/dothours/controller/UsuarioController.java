@@ -19,7 +19,7 @@ import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.service.UsuarioService;
 
 
-/**
+/*
  * Controlador responsável pelas operações relacionadas ao gerenciamento de usuários.
  * Expondo endpoints REST para criação, leitura, atualização e exclusão de usuários.
  * Utiliza o serviço {@link UsuarioService} para realizar a lógica de negócios.

@@ -86,7 +86,7 @@ public class AtividadeController {
 
 
 
-    /**
+    /*
      * Atualiza uma atividade com os dados fornecidos.
      *
      * @param id O ID da atividade a ser atualizada.

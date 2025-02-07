@@ -95,7 +95,7 @@ public class LancamentoHorasController {
 
 
 
-    /**
+    /*
      * Atualiza um lançamento de horas com os dados fornecidos.
      *
      * @param id O ID do lançamento de horas a ser atualizado.
