@@ -18,6 +18,13 @@ import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.service.AtividadeService;
 
+
+
+/**
+ * Controlador responsável pelas operações relacionadas às atividades.
+ * Expondo endpoints REST para criação, leitura, atualização, exclusão e busca de atividades.
+ * Utiliza o serviço {@link AtividadeService} para realizar a lógica de negócios.
+ */
 @RestController
 @RequestMapping("/api/atividades")
 public class AtividadeController {
@@ -25,6 +32,15 @@ public class AtividadeController {
     @Autowired
     private AtividadeService atividadeService;
 
+
+
+    /**
+     * Cria uma nova atividade com os dados fornecidos.
+     *
+     * @param atividadeDTO DTO contendo os dados da nova atividade.
+     * @return A resposta HTTP com o status 201 (Created) e o DTO da atividade recém-criada.
+     *         Caso ocorra um erro ao criar a atividade, retorna o status 400 (Bad Request) com a mensagem de erro.
+     */
      @PostMapping("/create")
     public ResponseEntity<?> criarAtividade(@RequestBody AtividadeDTO atividadeDTO) {
         try {
@@ -35,6 +51,13 @@ public class AtividadeController {
         }
     }
 
+
+
+    /**
+     * Busca todas as atividades cadastradas.
+     *
+     * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs das atividades encontradas.
+     */
     @GetMapping("/findAll")
     public ResponseEntity<List<AtividadeDTO>> findAll() {
 
@@ -43,6 +66,15 @@ public class AtividadeController {
     
     }
 
+
+
+    /**
+     * Busca uma atividade pelo ID.
+     *
+     * @param id O ID da atividade a ser buscada.
+     * @return A resposta HTTP com o status 200 (OK) e o DTO da atividade encontrada.
+     *         Caso a atividade não seja encontrada, retorna o status 404 (Not Found).
+     */
     @GetMapping("/findById/{id}")
     public ResponseEntity<AtividadeDTO> findById(@PathVariable Long id) {
 
@@ -52,6 +84,16 @@ public class AtividadeController {
 
     }
 
+
+
+    /**
+     * Atualiza uma atividade com os dados fornecidos.
+     *
+     * @param id O ID da atividade a ser atualizada.
+     * @param atividadeAtualizada DTO contendo os dados atualizados da atividade.
+     * @return A resposta HTTP com o status 200 (OK) e o DTO da atividade atualizada.
+     *         Caso ocorra um erro ao atualizar a atividade, retorna o status 404 (Not Found).
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<AtividadeDTO> update(@PathVariable Long id, @RequestBody AtividadeDTO atividadeAtualizada) {
 
@@ -64,6 +106,15 @@ public class AtividadeController {
 
     }
 
+
+
+    /**
+     * Exclui uma atividade pelo ID.
+     *
+     * @param id O ID da atividade a ser excluída.
+     * @return A resposta HTTP com o status 204 (No Content).
+     *         Caso a atividade não seja encontrada, retorna o status 404 (Not Found).
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
@@ -76,6 +127,14 @@ public class AtividadeController {
 
     }
 
+
+
+      /**
+     * Retorna todas as atividades associadas a um projeto específico.
+     *
+     * @param idProjeto O projeto pelo qual as atividades serão filtradas.
+     * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs das atividades associadas ao projeto.
+     */
     @GetMapping("/findByProjeto/{id_projeto}")
     public ResponseEntity<List<AtividadeDTO>> findByProjeto(@PathVariable Projeto idProjeto) {
 
@@ -85,6 +144,14 @@ public class AtividadeController {
     }
 
 
+
+
+      /**
+     * Retorna todas as atividades associadas a um usuário responsável específico.
+     *
+     * @param usuarioResponsavel O ID do usuário responsável pelas atividades.
+     * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs das atividades atribuídas ao usuário.
+     */
     @GetMapping("/findByUsuarioResponsavel/{usuarioResponsavel}")
     public ResponseEntity<List<AtividadeDTO>> findByUsuarioResponsavel(@PathVariable Long usuarioResponsavel) {
 

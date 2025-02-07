@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.service.ProjetoService;
 
+
+/**
+ * Controlador responsável pelas operações relacionadas ao gerenciamento de projetos.
+ * Expondo endpoints REST para criação, leitura, atualização e exclusão de projetos.
+ * Utiliza o serviço {@link ProjetoService} para realizar a lógica de negócios.
+ */
 @RestController
 @RequestMapping("/api/projetos")
 public class ProjetoController {
@@ -25,6 +31,14 @@ public class ProjetoController {
     private ProjetoService projetoService;
 
     
+
+     /**
+     * Cria um novo projeto com os dados fornecidos.
+     *
+     * @param projetoDTO DTO contendo os dados do novo projeto a ser criado.
+     * @return A resposta HTTP com o status 201 (Created) e o DTO do projeto recém-criado.
+     *         Caso ocorra um erro ao criar o projeto, retorna o status 400 (Bad Request) com a mensagem de erro.
+     */
     @PostMapping ("/create")
     public ResponseEntity<?> criarProjeto(@RequestBody ProjetoDTO projetoDTO) {
 
@@ -37,6 +51,13 @@ public class ProjetoController {
 
     }
 
+
+
+    /**
+     * Lista todos os projetos cadastrados.
+     *
+     * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs dos projetos cadastrados.
+     */
     @GetMapping("/listAll")
     public ResponseEntity<List<ProjetoDTO>> listarProjetos() {
 
@@ -45,6 +66,15 @@ public class ProjetoController {
 
     }
 
+
+
+    /**
+     * Busca um projeto pelo ID.
+     *
+     * @param id ID do projeto a ser buscado.
+     * @return A resposta HTTP com o status 200 (OK) e o DTO do projeto encontrado.
+     *         Caso o projeto não seja encontrado, retorna o status 404 (Not Found).
+     */
     @GetMapping("/findById/{id}")
     public ResponseEntity<ProjetoDTO> buscarProjetoPorId(@PathVariable Long id) {
         return projetoService.findById(id)
@@ -52,6 +82,16 @@ public class ProjetoController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+
+
+    /**
+     * Atualiza um projeto com os dados fornecidos.
+     *
+     * @param id ID do projeto a ser atualizado.
+     * @param projetoDTO DTO contendo os dados atualizados do projeto.
+     * @return A resposta HTTP com o status 200 (OK) e o DTO do projeto atualizado.
+     *         Caso ocorra um erro ao atualizar o projeto, retorna o status 404 (Not Found) com a mensagem de erro.
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> atualizarProjeto(@PathVariable Long id, @RequestBody ProjetoDTO projetoDTO) {
         try {
@@ -62,6 +102,15 @@ public class ProjetoController {
         }
     }
 
+
+    
+    /**
+     * Deleta um projeto pelo ID.
+     *
+     * @param id ID do projeto a ser deletado.
+     * @return A resposta HTTP com o status 200 (OK) e a mensagem de sucesso.
+     *         Caso o projeto não seja encontrado, retorna o status 404 (Not Found) com a mensagem de erro.
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletarProjeto(@PathVariable Long id) {
 

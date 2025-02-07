@@ -20,6 +20,12 @@ import br.com.system.dothours.dto.LancamentoHorasDTO;
 import br.com.system.dothours.model.LancamentoHoras;
 import br.com.system.dothours.service.LancamentoHorasService;
 
+
+/**
+ * Controlador responsável pelas operações relacionadas ao gerenciamento de lançamentos de horas.
+ * Expondo endpoints REST para criação, leitura, atualização e exclusão de lançamentos de horas.
+ * Utiliza o serviço {@link LancamentoHorasService} para realizar a lógica de negócios.
+ */
 @RestController
 @RequestMapping("/api/lancamento-horas")
 public class LancamentoHorasController {
@@ -27,6 +33,14 @@ public class LancamentoHorasController {
     @Autowired
     private LancamentoHorasService lancamentoHorasService;
 
+
+     /**
+     * Cria um novo lançamento de horas com os dados fornecidos.
+     *
+     * @param lancamentoHorasDTO DTO contendo os dados do novo lançamento de horas.
+     * @return A resposta HTTP com o status 201 (Created) e o DTO do lançamento de horas recém-criado.
+     *         Caso ocorra um erro ao criar o lançamento, retorna o status 400 (Bad Request) com a mensagem de erro.
+     */
     @PostMapping("/create")
     public ResponseEntity<LancamentoHorasDTO> criarLancamento(@RequestBody LancamentoHorasDTO lancamentoHorasDTO) {
         try {
@@ -41,6 +55,13 @@ public class LancamentoHorasController {
         }
     }
 
+
+
+    /**
+     * Lista todos os lançamentos de horas cadastrados.
+     *
+     * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs dos lançamentos de horas cadastrados.
+     */
     @GetMapping ("/findAll")
     public ResponseEntity<List<LancamentoHorasDTO>> listarLancamentos() {
 
@@ -52,6 +73,15 @@ public class LancamentoHorasController {
 
     }
 
+
+
+     /**
+     * Retorna um lançamento de horas específico pelo seu ID.
+     *
+     * @param id O ID do lançamento de horas a ser recuperado.
+     * @return A resposta HTTP com o status 200 (OK) e o DTO do lançamento de horas encontrado.
+     *         Caso o lançamento não seja encontrado, retorna o status 404 (Not Found) com a mensagem de erro.
+     */
     @GetMapping("/findById/{id}")
     public ResponseEntity<?> buscarLancamentoPorId(@PathVariable Long id) {
 
@@ -63,6 +93,16 @@ public class LancamentoHorasController {
     }
 
 
+
+
+    /**
+     * Atualiza um lançamento de horas com os dados fornecidos.
+     *
+     * @param id O ID do lançamento de horas a ser atualizado.
+     * @param lancamentoAtualizadoDTO DTO contendo os dados atualizados do lançamento de horas.
+     * @return A resposta HTTP com o status 200 (OK) e o DTO do lançamento de horas atualizado.
+     *         Caso ocorra um erro ao atualizar o lançamento, retorna o status 404 (Not Found) com a mensagem de erro.
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> atualizarLancamento(@PathVariable Long id, @RequestBody LancamentoHorasDTO lancamentoAtualizadoDTO) {
 
@@ -76,6 +116,14 @@ public class LancamentoHorasController {
 
     }
 
+
+
+    /**
+     * Deleta um lançamento de horas pelo ID.
+     *
+     * @param id O ID do lançamento de horas a ser deletado.
+     * @return A resposta HTTP com o status 200 (OK) caso o lançamento seja deletado, ou 404 (Not Found) caso não exista.
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletarLancamento(@PathVariable Long id) {
 
