@@ -8,6 +8,6 @@ import br.com.system.dothours.model.Usuario;
 
 public interface LoginRepository extends JpaRepository<Usuario, Long> {
 
-    Optional<Usuario> findByNome(String username);
+    Optional<Usuario> findByUsername(String nome);
 
 }

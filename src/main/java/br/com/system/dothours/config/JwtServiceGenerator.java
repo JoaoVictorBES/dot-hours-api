@@ -46,7 +46,7 @@ public class JwtServiceGenerator {
     public String generateToken(Usuario userDetails) {
 	
 	  
-	  
+        // Payload no qual eu posso buscar o parametros que eu quero//
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("username", userDetails.getNome());
         extraClaims.put("id", userDetails.getId().toString());

@@ -74,7 +74,7 @@ public class SecurityManager {
      */
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> loginRepository.findByNome(username)
+        return username -> loginRepository.findByUsername(username)
             .map(usuario -> User.withUsername(usuario.getNome())
                 .password(usuario.getSenha())
                 .roles(usuario.getRole())

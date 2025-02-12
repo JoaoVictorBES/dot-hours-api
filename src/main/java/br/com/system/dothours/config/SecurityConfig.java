@@ -59,10 +59,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)  // Desabilitar a configuração de CORS por padrão no Spring Security
+            .cors(AbstractHttpConfigurer::disable)  
             .authorizeHttpRequests((requests) -> requests
-                .anyRequest().permitAll()
-            )
+                .requestMatchers("/api/login").permitAll()
+                .anyRequest().authenticated())
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

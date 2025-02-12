@@ -2,7 +2,12 @@ package br.com.system.dothours.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,8 +20,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
     
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; 
@@ -66,9 +72,6 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -102,6 +105,20 @@ public class Usuario {
         return role;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.nome;
+    }
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -115,5 +132,30 @@ public class Usuario {
     }
 
     
+    @Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+	    authorities.add(new SimpleGrantedAuthority(this.role));
+	    return authorities;
+	}
 
+    @Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }

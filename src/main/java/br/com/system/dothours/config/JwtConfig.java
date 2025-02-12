@@ -26,7 +26,7 @@ public class JwtConfig {
      * Chave secreta usada para a assinatura dos tokens JWT. 
      * Deve ser mantida em segurança e nunca ser exposta publicamente.
      */
-	public static final String SECRET_KEY = "  AQUIUMACHAVESECRETADASUAAPIAQUIUMACHAVESECRETADASUAAPIAQUIUMACHAVESECRETADASUAAPIAQUI";
+	public static final String SECRET_KEY = "  z8R1K3sD9mW4X2pL7vN0Q5jY6tV8bF2cP9aG1dM3xT7oZ4wJ6kC5Y7nR0X8L2vB";
 	
 
 	 /** 
