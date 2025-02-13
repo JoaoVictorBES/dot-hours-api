@@ -16,33 +16,48 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.system.dothours.dto.UsuarioCriadoDTO;
 import br.com.system.dothours.dto.UsuarioDTO;
+import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.UsuarioService;
 
 
 /*
  * Controlador responsável pelas operações relacionadas ao gerenciamento de usuários.
  * Expondo endpoints REST para criação, leitura, atualização e exclusão de usuários.
- * Utiliza o serviço {@link UsuarioService} para realizar a lógica de negócios.
+ * Utiliza o serviço {UsuarioService} para realizar a lógica de negócios.
  */
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/usuario")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
 
-
-     /**
-     * Cria um novo usuário com os dados fornecidos.
+    /**
+     * Endpoint para cadastrar um novo usuário no sistema.
      *
-     * @param usuarioCreateDTO DTO contendo os dados do novo usuário a ser criado.
-     * @return A resposta HTTP com o status 201 (Created) e o DTO do usuário recém-criado.
+     * Este método recebe um objeto {Usuario} no corpo da requisição, chama o serviço para criar
+     * o usuário e retorna um {UsuarioDTO} com os dados do usuário salvo.
+     *
+     * Em caso de erro durante o processo de criação, uma resposta com status {500 Internal Server Error}
+     * é retornada.
+     *
+     * @param usuario O objeto {Usuario} contendo os dados do usuário a ser cadastrado.
+     * @return Um {ResponseEntity} contendo o {UsuarioDTO} do usuário salvo e o status {201 Created}
+     * em caso de sucesso, ou {500 Internal Server Error} em caso de falha.
      */
-    @PostMapping("/create")
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioCriadoDTO usuarioCreateDTO) {
-        UsuarioDTO novoUsuario = usuarioService.create(usuarioCreateDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuario);
+    @PostMapping("/cadastro")
+    public ResponseEntity<UsuarioDTO> create(@RequestBody Usuario usuario) {
+        try {
+            UsuarioDTO usuarioSalvo = usuarioService.create(usuario);
+
+            System.out.println("Usuário salvo: " + usuarioSalvo);
+
+            return new ResponseEntity<>(usuarioSalvo, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

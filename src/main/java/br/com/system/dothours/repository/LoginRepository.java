@@ -1,4 +1,4 @@
-package br.com.system.dothours.auth.Login;
+package br.com.system.dothours.repository;
 
 import java.util.Optional;
 
@@ -8,6 +8,6 @@ import br.com.system.dothours.model.Usuario;
 
 public interface LoginRepository extends JpaRepository<Usuario, Long> {
 
-    Optional<Usuario> findByUsername(String nome);
+    public Optional<Usuario> findByUsername(String username);
 
 }

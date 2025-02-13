@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class AtividadeDTO {
 
-    public AtividadeDTO(Long id1, String nome1, String descricao1, LocalDateTime dataInicio1, LocalDateTime dataFim1, String status1, Long id2, Long id3, LocalDateTime dataCriacao1) {
+    public AtividadeDTO(Long idAtividade, String nomeAtividade, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, String status, Long idProjeto, Long idUsuarioResponsavel, LocalDateTime dataCriacao) {
     }
 
     
@@ -18,10 +18,12 @@ public class AtividadeDTO {
     private String status;
     private Long idUsuarioResponsavel;
     private LocalDate dataCriacao;
-    // Getters e Setters
+
+    
     public Long getId() { 
         return id; 
     }
+
     public void setId(Long id) { 
         this.id = id; 
     }
@@ -29,6 +31,7 @@ public class AtividadeDTO {
     public Long getIdProjeto() { 
         return idProjeto; 
     }
+
     public void setIdProjeto(Long idProjeto) { 
         this.idProjeto = idProjeto; 
     }
@@ -36,6 +39,7 @@ public class AtividadeDTO {
     public String getNome() { 
         return nome; 
     }
+
     public void setNome(String nome) { 
         this.nome = nome; 
     }
@@ -43,6 +47,7 @@ public class AtividadeDTO {
     public String getDescricao() { 
         return descricao; 
     }
+
     public void setDescricao(String descricao) { 
         this.descricao = descricao; 
     }
@@ -50,6 +55,7 @@ public class AtividadeDTO {
     public LocalDateTime getDataInicio() { 
         return dataInicio; 
     }
+
     public void setDataInicio(LocalDateTime dataInicio) { 
         this.dataInicio = dataInicio; 
     }
@@ -57,6 +63,7 @@ public class AtividadeDTO {
     public LocalDateTime getDataFim() {
         return dataFim; 
     }
+
     public void setDataFim(LocalDateTime dataFim) {
         this.dataFim = dataFim; 
     }
@@ -64,6 +71,7 @@ public class AtividadeDTO {
     public String getStatus() { 
         return status; 
     }
+
     public void setStatus(String status) { 
         this.status = status; 
     }
@@ -71,6 +79,7 @@ public class AtividadeDTO {
     public Long getIdUsuarioResponsavel() { 
         return idUsuarioResponsavel; 
     }
+
     public void setIdUsuarioResponsavel(Long idUsuarioResponsavel) { 
         this.idUsuarioResponsavel = idUsuarioResponsavel; 
     }
@@ -78,13 +87,11 @@ public class AtividadeDTO {
     public LocalDate getDataCriacao() { 
         return dataCriacao; 
     }
+
     public void setDataCriacao(LocalDate dataCriacao) { 
         this.dataCriacao = dataCriacao; 
     }
-    public void setPrioridade(Object prioridade) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPrioridade'");
-    }
+
 }
 
 

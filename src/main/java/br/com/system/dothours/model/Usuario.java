@@ -26,12 +26,14 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; 
-    private String nome;
+    private String username;
     private String email;
-    private String senha;
+    private String password;
     private LocalDateTime dataCriaçao;
     private LocalDateTime ultimoLogin;
     private String role;
+    private String recoveryToken; 
+    private LocalDateTime tokenExpiration;
 
     @ManyToMany
     @JoinTable(
@@ -46,11 +48,11 @@ public class Usuario implements UserDetails {
         
     }
 
-    public Usuario(Long id, String nome, String email, String senha, LocalDateTime dataCriaçao, LocalDateTime ultimoLogin, String role) {
+    public Usuario(Long id, String username, String email, String password, LocalDateTime dataCriaçao, LocalDateTime ultimoLogin, String role) {
         this.id = id;
-        this.nome = nome;
+        this.username = username;
         this.email = email;
-        this.senha = senha;
+        this.password = password;
         this.dataCriaçao = dataCriaçao;
         this.ultimoLogin = ultimoLogin;
         this.role = role;
@@ -64,26 +66,12 @@ public class Usuario implements UserDetails {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
 
     public LocalDateTime getDataCriaçao() {
         return dataCriaçao;
@@ -101,6 +89,14 @@ public class Usuario implements UserDetails {
         this.ultimoLogin = ultimoLogin;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getRole() {
         return role;
     }
@@ -111,12 +107,12 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.senha;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.nome;
+        return this.username;
     }
 
     public void setRole(String role) {
@@ -157,5 +153,21 @@ public class Usuario implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+    public String getRecoveryToken() {
+		return recoveryToken;
+	}
+
+	public void setRecoveryToken(String recoveryToken) {
+		this.recoveryToken = recoveryToken;
+	}
+
+	public LocalDateTime getTokenExpiration() {
+		return tokenExpiration;
+	}
+
+	public void setTokenExpiration(LocalDateTime tokenExpiration) {
+		this.tokenExpiration = tokenExpiration;
 	}
 }

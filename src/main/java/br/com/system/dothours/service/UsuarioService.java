@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.dto.UsuarioCriadoDTO;
@@ -21,22 +22,46 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
 
-    /**
-     * Cria um novo usuário no sistema.
-     *
-     * @param usuarioCreateDTO DTO contendo os dados do usuário a ser criado.
-     * @return {@link UsuarioDTO} representando o usuário criado.
-     */
-    public UsuarioDTO create(UsuarioCriadoDTO usuarioCreateDTO) {
-        Usuario usuario = new Usuario();
-        usuario.setNome(usuarioCreateDTO.getNome());
-        usuario.setEmail(usuarioCreateDTO.getEmail());
-        usuario.setSenha(usuarioCreateDTO.getSenha()); 
-        usuario.setRole(usuarioCreateDTO.getRole());
-        usuario.setDataCriaçao(LocalDateTime.now());
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+   
 
-        usuario = usuarioRepository.save(usuario);
-        return UsuarioDTO.fromEntity(usuario);
+    /**
+     * Cria um novo usuário no sistema, aplicando validações e configurações padrão.
+     *
+     * Este método valida os campos obrigatórios do usuário, define valores padrão para
+     * determinados atributos (como função e data de criação), codifica a senha antes de salvar
+     * e retorna um {UsuarioDTO} com os dados do usuário salvo.
+     *
+     * @param usuario O objeto {@link Usuario} contendo os dados do usuário a ser criado.
+     * @return Um {UsuarioDTO} representando o usuário salvo no banco de dados.
+     * @throws IllegalArgumentException Se algum dos campos obrigatórios (username, email ou password) estiver ausente ou vazio.
+     */
+    public UsuarioDTO create(Usuario usuario) {
+
+        if (usuario.getUsername() == null || usuario.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("Username é obrigatório");
+        }
+        if (usuario.getEmail() == null || usuario.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Email é obrigatório");
+        }
+        if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password é obrigatório");
+        }
+    
+        if (usuario.getRole() == null || usuario.getRole().isEmpty()) {
+            usuario.setRole("USER");
+        }
+    
+        
+    
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuario.setDataCriaçao(LocalDateTime.now());
+    
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+    
+    
+        return UsuarioDTO.fromEntity(usuarioSalvo);
     }
 
 
@@ -74,9 +99,9 @@ public class UsuarioService {
      */
     public UsuarioDTO update(Long id, UsuarioCriadoDTO usuarioCreateDTO) {
         return usuarioRepository.findById(id).map(usuario -> {
-            usuario.setNome(usuarioCreateDTO.getNome());
+            usuario.setUsername(usuarioCreateDTO.getUsername());
             usuario.setEmail(usuarioCreateDTO.getEmail());
-            usuario.setSenha(usuarioCreateDTO.getSenha());
+            usuario.setPassword(usuarioCreateDTO.getPassword());
             usuario.setRole(usuarioCreateDTO.getRole());
 
             usuarioRepository.save(usuario);

@@ -1,4 +1,4 @@
-package br.com.system.dothours.auth.Login;
+package br.com.system.dothours.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.com.system.dothours.auth.Login.Login;
+import br.com.system.dothours.service.LoginService;
 
 @RestController
 @RequestMapping("/api/login")
@@ -25,10 +28,10 @@ public class LoginController {
 			return ResponseEntity.ok(loginService.logar(login));
 		}catch(AuthenticationException ex) {
 			System.out.println(ex.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
     

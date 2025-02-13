@@ -3,15 +3,17 @@ package br.com.system.dothours.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import br.com.system.dothours.auth.Login.LoginRepository;
+import br.com.system.dothours.repository.LoginRepository;
 
 
 /*
@@ -75,12 +77,17 @@ public class SecurityManager {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> loginRepository.findByUsername(username)
-            .map(usuario -> User.withUsername(usuario.getNome())
-                .password(usuario.getSenha())
+            .map(usuario -> User.withUsername(usuario.getUsername())
+                .password(usuario.getPassword())
                 .roles(usuario.getRole())
                 .build()
             )
             .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
+
+    @Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
+	}
 
 }

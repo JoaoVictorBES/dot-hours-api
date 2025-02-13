@@ -48,7 +48,7 @@ public class JwtServiceGenerator {
 	  
         // Payload no qual eu posso buscar o parametros que eu quero//
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("username", userDetails.getNome());
+        extraClaims.put("username", userDetails.getUsername());
         extraClaims.put("id", userDetails.getId().toString());
         extraClaims.put("role", userDetails.getRole()); 
         
@@ -56,7 +56,7 @@ public class JwtServiceGenerator {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getNome())
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(new Date().getTime() + 3600000 * JwtConfig.HORAS_EXPIRACAO_TOKEN))
                 .signWith(getSigningKey(), JwtConfig.ALGORITMO_ASSINATURA)

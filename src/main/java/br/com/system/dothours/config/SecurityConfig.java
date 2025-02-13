@@ -62,6 +62,7 @@ public class SecurityConfig {
             .cors(AbstractHttpConfigurer::disable)  
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/api/login").permitAll()
+                .requestMatchers("api/usuario/cadastro").permitAll()
                 .anyRequest().authenticated())
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -93,6 +94,9 @@ public class SecurityConfig {
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+
         return config.getAuthenticationManager();
+
     }
+    
 }
