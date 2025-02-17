@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.system.dothours.dto.ProjetoDTO;
+import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.ProjetoService;
+import br.com.system.dothours.service.UsuarioService;
 
 
 /**
@@ -30,6 +34,9 @@ public class ProjetoController {
     @Autowired
     private ProjetoService projetoService;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     
 
      /**
@@ -43,6 +50,12 @@ public class ProjetoController {
     public ResponseEntity<?> criarProjeto(@RequestBody ProjetoDTO projetoDTO) {
 
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();  
+        
+            Usuario usuario = usuarioService.buscarPorUsername(username); 
+            projetoDTO.setIdUsuarioResponsavel(usuario.getId());
+
             ProjetoDTO novoProjetoDTO = projetoService.create(projetoDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(novoProjetoDTO);
         } catch (RuntimeException e) {

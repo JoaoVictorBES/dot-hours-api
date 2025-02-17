@@ -47,6 +47,10 @@ public class ProjetoService {
         projeto.setDataCriacao(LocalDateTime.now());
         projeto.setPrioridade(projetoDTO.getPrioridade());
 
+        Usuario usuarioResponsavel = usuarioRepository.findById(projetoDTO.getIdUsuarioResponsavel())
+            .orElseThrow(() -> new RuntimeException("Usuário responsável não encontrado"));
+        projeto.setUsuarioResponsavel(usuarioResponsavel);
+
         Projeto projetoSalvo = projetoRepository.save(projeto);
         return convertToDTO(projetoSalvo);
     }

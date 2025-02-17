@@ -15,6 +15,7 @@ public class ProjetoDTO {
     private Long idUsuarioResponsavel;  
     private LocalDateTime dataCriacao;
     private String prioridade;
+    
     public String getNome() {
         return nome;
     }
