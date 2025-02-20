@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.model.Projeto;
+import br.com.system.dothours.model.Usuario;
+import br.com.system.dothours.repository.UsuarioRepository;
 import br.com.system.dothours.service.AtividadeService;
 
 
@@ -32,7 +36,8 @@ public class AtividadeController {
     @Autowired
     private AtividadeService atividadeService;
 
-
+    @Autowired 
+    private UsuarioRepository usuarioRepository;
 
     /**
      * Cria uma nova atividade com os dados fornecidos.
@@ -44,6 +49,12 @@ public class AtividadeController {
      @PostMapping("/create")
     public ResponseEntity<?> criarAtividade(@RequestBody AtividadeDTO atividadeDTO) {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
             AtividadeDTO novaAtividade = atividadeService.create(atividadeDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(novaAtividade);
         } catch (RuntimeException e) {

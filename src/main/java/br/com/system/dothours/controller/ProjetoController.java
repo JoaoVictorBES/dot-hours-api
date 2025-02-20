@@ -37,15 +37,8 @@ public class ProjetoController {
     @Autowired
     private UsuarioService usuarioService;
 
-    
 
-     /**
-     * Cria um novo projeto com os dados fornecidos.
-     *
-     * @param projetoDTO DTO contendo os dados do novo projeto a ser criado.
-     * @return A resposta HTTP com o status 201 (Created) e o DTO do projeto recém-criado.
-     *         Caso ocorra um erro ao criar o projeto, retorna o status 400 (Bad Request) com a mensagem de erro.
-     */
+
     @PostMapping ("/create")
     public ResponseEntity<?> criarProjeto(@RequestBody ProjetoDTO projetoDTO) {
 
@@ -54,6 +47,10 @@ public class ProjetoController {
             String username = authentication.getName();  
         
             Usuario usuario = usuarioService.buscarPorUsername(username); 
+
+            if (!usuario.getRole().equals("ADMIN")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Apenas administradores podem criar projetos.");
+            }
             projetoDTO.setIdUsuarioResponsavel(usuario.getId());
 
             ProjetoDTO novoProjetoDTO = projetoService.create(projetoDTO);

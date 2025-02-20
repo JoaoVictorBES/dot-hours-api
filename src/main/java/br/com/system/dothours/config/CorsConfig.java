@@ -43,7 +43,11 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+                registry.addMapping("/**").allowedOrigins("http://localhost:4200")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE")
+                    .allowedHeaders("Authorization", "Content-Type", "Accept")
+                    .allowCredentials(true)
+                    .maxAge(3600);  // Cache de CORS por 1 hora
             }
         };
         

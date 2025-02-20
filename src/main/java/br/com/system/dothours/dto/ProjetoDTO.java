@@ -1,6 +1,11 @@
 package br.com.system.dothours.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
+
+import br.com.system.Enum.PrioridadeProjeto;
+import br.com.system.Enum.StatusProjeto;
+
 
 
 
@@ -9,60 +14,29 @@ public class ProjetoDTO {
     private Long id;
     private String nome;
     private String descricao;
-    private LocalDateTime dataInicio;
-    private LocalDateTime dataFim;
-    private String status;
-    private Long idUsuarioResponsavel;  
-    private LocalDateTime dataCriacao;
-    private String prioridade;
-    
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
+    private StatusProjeto status;
+    private Long idUsuarioResponsavel;
+    private LocalDate dataCriacao;
+    private PrioridadeProjeto prioridade;
+    private List<AtividadeDTO> atividades;
+
+    public ProjetoDTO() {}
+
+    public ProjetoDTO(Long id, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, 
+                      StatusProjeto status, Long idUsuarioResponsavel, LocalDate dataCriacao, PrioridadeProjeto prioridade, 
+                      List<AtividadeDTO> atividades) {
+        this.id = id;
         this.nome = nome;
-    }
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-    public LocalDateTime getDataInicio() {
-        return dataInicio;
-    }
-    public void setDataInicio(LocalDateTime dataInicio) {
         this.dataInicio = dataInicio;
-    }
-    public LocalDateTime getDataFim() {
-        return dataFim;
-    }
-    public void setDataFim(LocalDateTime dataFim) {
         this.dataFim = dataFim;
-    }
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
         this.status = status;
-    }
-    public Long getIdUsuarioResponsavel() {
-        return idUsuarioResponsavel;
-    }
-    public void setIdUsuarioResponsavel(Long idUsuarioResponsavel) {
         this.idUsuarioResponsavel = idUsuarioResponsavel;
-    }
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-    public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
-    }
-    public String getPrioridade() {
-        return prioridade;
-    }
-    public void setPrioridade(String prioridade) {
         this.prioridade = prioridade;
+        this.atividades = atividades;
     }
 
     public Long getId() {
@@ -72,6 +46,79 @@ public class ProjetoDTO {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public StatusProjeto getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusProjeto status) {
+        this.status = status;
+    }
+
+    public Long getIdUsuarioResponsavel() {
+        return idUsuarioResponsavel;
+    }
+
+    public void setIdUsuarioResponsavel(Long idUsuarioResponsavel) {
+        this.idUsuarioResponsavel = idUsuarioResponsavel;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public PrioridadeProjeto getPrioridade() {
+        return prioridade;
+    }
+
+    public void setPrioridade(PrioridadeProjeto prioridade) {
+        this.prioridade = prioridade;
+    }
+
+    public List<AtividadeDTO> getAtividades() {
+        return atividades;
+    }
+
+    public void setAtividades(List<AtividadeDTO> atividades) {
+        this.atividades = atividades;
+    }
  
+    
 
 }

@@ -4,15 +4,22 @@ package br.com.system.dothours.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.dto.AtividadeDTO;
+import br.com.system.dothours.dto.ProjetoDTO;
+import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.AtividadeRepository;
+import br.com.system.dothours.repository.ProjetoRepository;
+import br.com.system.dothours.repository.UsuarioRepository;
 
 
 /**
@@ -23,9 +30,14 @@ import br.com.system.dothours.repository.AtividadeRepository;
 @Service
 public class AtividadeService {
 
-   @Autowired
+    @Autowired
     private AtividadeRepository atividadesRepository;
 
+    @Autowired 
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ProjetoRepository projetoRepository;
 
 
      /**
@@ -36,13 +48,37 @@ public class AtividadeService {
      * @throws RuntimeException Se ocorrer algum erro ao salvar a atividade.
      */
     public AtividadeDTO create(AtividadeDTO atividadeDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Usuario usuarioResponsavel = usuarioRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuário responsável não encontrado"));
+
+        if (atividadeDTO.getProjeto() == null || atividadeDTO.getProjeto().getId() == null) {
+            throw new IllegalArgumentException("O ID do projeto não pode ser nulo");
+        }
+
+        Projeto projeto = projetoRepository.findById(atividadeDTO.getProjeto().getId())
+            .orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
+
         Atividade atividade = new Atividade();
+
         atividade.setNome(atividadeDTO.getNome());
         atividade.setDescricao(atividadeDTO.getDescricao());
         atividade.setDataInicio(atividadeDTO.getDataInicio());
         atividade.setDataFim(atividadeDTO.getDataFim());
         atividade.setStatus(atividadeDTO.getStatus());
         atividade.setDataCriacao(LocalDateTime.now());
+        atividade.setProjeto(projeto);  
+        atividade.setUsuarioResponsavel(usuarioResponsavel); 
+
+        List<Usuario> usuarios = usuarioRepository.findAllById(atividadeDTO.getUsuarios().stream()
+            .map(UsuarioDTO::getId) 
+            .collect(Collectors.toList()));
+    
+        atividade.setUsuarios(usuarios);
+
         Atividade atividadeSalva = atividadesRepository.save(atividade);
         return convertToDTO(atividadeSalva);
     }
@@ -117,18 +153,44 @@ public class AtividadeService {
      * @return O DTO correspondente à entidade Atividade.
      */
     private AtividadeDTO convertToDTO(Atividade atividade) {
-        return new AtividadeDTO(
-                atividade.getId(),
-                atividade.getNome(),
-                atividade.getDescricao(),
-                atividade.getDataInicio(),
-                atividade.getDataFim(),
-                atividade.getStatus(),
-                atividade.getProjeto().getId(),
-                atividade.getUsuarioResponsavel().getId(),
-                atividade.getDataCriacao()
-        );
+    AtividadeDTO dto = new AtividadeDTO();
+    dto.setId(atividade.getId());
+    dto.setNome(atividade.getNome());
+    dto.setDescricao(atividade.getDescricao());
+    dto.setDataInicio(atividade.getDataInicio());
+    dto.setDataFim(atividade.getDataFim());
+    dto.setStatus(atividade.getStatus());
+    dto.setIdUsuarioResponsavel(atividade.getUsuarioResponsavel().getId());
+    dto.setDataCriacao(atividade.getDataCriacao());
+
+    if (atividade.getProjeto() != null) {
+        ProjetoDTO projetoDTO = new ProjetoDTO();
+        projetoDTO.setId(atividade.getProjeto().getId());
+        projetoDTO.setNome(atividade.getProjeto().getNome());
+        projetoDTO.setDescricao(atividade.getProjeto().getDescricao()); 
+        projetoDTO.setDataInicio(atividade.getProjeto().getDataInicio()); 
+        projetoDTO.setDataFim(atividade.getProjeto().getDataFim()); 
+        projetoDTO.setStatus(atividade.getProjeto().getStatus()); 
+        projetoDTO.setPrioridade(atividade.getProjeto().getPrioridade());
+        projetoDTO.setDataCriacao(atividade.getProjeto().getDataCriacao()); 
+        dto.setProjeto(projetoDTO);
     }
+
+    if (atividade.getUsuarios() != null) {
+        List<UsuarioDTO> usuariosDTO = atividade.getUsuarios().stream().map(usuario -> {
+            UsuarioDTO usuarioDTO = new UsuarioDTO();
+            usuarioDTO.setId(usuario.getId());
+            usuarioDTO.setUsername(usuario.getUsername());
+            usuarioDTO.setEmail(usuario.getEmail()); 
+            usuarioDTO.setUltimoLogin(usuario.getUltimoLogin());
+            return usuarioDTO;
+        }).collect(Collectors.toList());
+        dto.setUsuarios(usuariosDTO);
+    }
+
+    return dto;
+}
+
 
 
 

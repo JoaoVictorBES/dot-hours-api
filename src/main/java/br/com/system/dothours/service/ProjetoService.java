@@ -1,6 +1,6 @@
 package br.com.system.dothours.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
@@ -43,15 +44,19 @@ public class ProjetoService {
         projeto.setDataInicio(projetoDTO.getDataInicio());
         projeto.setDataFim(projetoDTO.getDataFim());
         projeto.setStatus(projetoDTO.getStatus());
-        projeto.setUsuarioResponsavel(usuario);
-        projeto.setDataCriacao(LocalDateTime.now());
+        projeto.setUsuarioResponsavel(usuarioRepository.findById(projetoDTO.getIdUsuarioResponsavel())
+        .orElseThrow(() -> new RuntimeException("Usuário não encontrado")));
+        projeto.setDataCriacao(LocalDate.now());
         projeto.setPrioridade(projetoDTO.getPrioridade());
 
         Usuario usuarioResponsavel = usuarioRepository.findById(projetoDTO.getIdUsuarioResponsavel())
             .orElseThrow(() -> new RuntimeException("Usuário responsável não encontrado"));
         projeto.setUsuarioResponsavel(usuarioResponsavel);
 
+        // Projeto salvo //
         Projeto projetoSalvo = projetoRepository.save(projeto);
+
+        // Retorna o DTO do projeto salvo //
         return convertToDTO(projetoSalvo);
     }
 
@@ -101,7 +106,9 @@ public class ProjetoService {
             projeto.setDataFim(projetoDTO.getDataFim());
             projeto.setStatus(projetoDTO.getStatus());
             projeto.setPrioridade(projetoDTO.getPrioridade());
-            projeto.setIdUsuarioResponsavel(projetoDTO.getIdUsuarioResponsavel());
+            Usuario usuarioResponsavel = usuarioRepository.findById(projetoDTO.getIdUsuarioResponsavel())
+                .orElseThrow(() -> new RuntimeException("Usuário responsável não encontrado"));
+            projeto.setUsuarioResponsavel(usuarioResponsavel);
 
             return projetoRepository.save(projeto);
         }).orElseThrow(() -> new RuntimeException("Projeto não encontrado com ID: " + id));
@@ -147,6 +154,22 @@ public class ProjetoService {
         projetoDTO.setStatus(projeto.getStatus());
         projetoDTO.setPrioridade(projeto.getPrioridade());
         projetoDTO.setIdUsuarioResponsavel(projeto.getUsuarioResponsavel().getId());
+
+        if (projeto.getAtividades() != null) {
+            List<AtividadeDTO> atividadesDTO = projeto.getAtividades().stream()
+                .map(atividade -> new AtividadeDTO(
+                    atividade.getId(),
+                    atividade.getNome(),
+                    atividade.getDescricao(),
+                    atividade.getDataInicio(),
+                    atividade.getDataFim(),
+                    atividade.getStatus(),
+                    atividade.getUsuarioResponsavel().getId(),
+                    atividade.getDataCriacao()))
+                .collect(Collectors.toList());
+            projetoDTO.setAtividades(atividadesDTO);
+    }
+
         return projetoDTO;
 
     }

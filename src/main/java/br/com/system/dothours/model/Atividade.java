@@ -22,7 +22,7 @@ public class Atividade {
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "id_projeto", nullable = false)
+    @JoinColumn(name = "id_projeto", nullable = false, referencedColumnName = "id")
     private Projeto projeto;
 
     private String nome;

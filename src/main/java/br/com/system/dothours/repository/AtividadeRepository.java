@@ -3,6 +3,8 @@ package br.com.system.dothours.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Projeto;
@@ -41,5 +43,8 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
      * @return uma lista de {Atividade} associadas ao usuário responsável especificado
      */
     List<Atividade> findByUsuarioResponsavel(Usuario usuarioResponsavel);
+
+    @Query("SELECT a FROM Atividade a WHERE a.projeto.id = :idProjeto")
+    List<Atividade> findByProjetoId(@Param("idProjeto") Long idProjeto);
 
 }

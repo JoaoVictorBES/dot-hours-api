@@ -14,6 +14,10 @@ public class UsuarioDTO {
     private LocalDateTime ultimoLogin;
     private String role;
 
+    public UsuarioDTO(){
+        
+    }
+
     public UsuarioDTO(Long id, String username, String password, String email, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, String role) {
         this.id = id;
         this.username = username;
