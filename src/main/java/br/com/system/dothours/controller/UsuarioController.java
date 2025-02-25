@@ -26,7 +26,7 @@ import br.com.system.dothours.service.UsuarioService;
  * Utiliza o serviço {UsuarioService} para realizar a lógica de negócios.
  */
 @RestController
-@RequestMapping("/api/usuario")
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     @Autowired

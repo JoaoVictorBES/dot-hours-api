@@ -65,7 +65,7 @@ public class ProjetoService {
      /**
      * Retorna uma lista de todos os projetos cadastrados.
      *
-     * @return Lista de {@link ProjetoDTO}.
+     * @return Lista de {ProjetoDTO}.
      */
     public List<ProjetoDTO> findAll() {
 

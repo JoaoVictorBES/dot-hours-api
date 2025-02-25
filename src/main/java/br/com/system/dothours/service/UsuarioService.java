@@ -125,8 +125,8 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorUsername(String username) {
-    return usuarioRepository.findByUsername(username)
+        return usuarioRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o username: " + username));
-}
+    }
 
 }

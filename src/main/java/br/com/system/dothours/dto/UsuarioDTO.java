@@ -2,6 +2,7 @@ package br.com.system.dothours.dto;
 
 import java.time.LocalDateTime;
 
+
 import br.com.system.dothours.model.Usuario;
 
 public class UsuarioDTO {

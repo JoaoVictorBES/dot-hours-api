@@ -1,6 +1,6 @@
 package br.com.system.dothours.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class AtividadeDTO {
@@ -8,20 +8,22 @@ public class AtividadeDTO {
     private Long id;
     private String nome;
     private String descricao;
-    private LocalDateTime dataInicio;
-    private LocalDateTime dataFim;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
     private String status;
     private Long idUsuarioResponsavel;
-    private LocalDateTime dataCriacao;  // Corrigido para LocalDateTime
-    private ProjetoDTO projeto;  
-    private List<UsuarioDTO> usuarios;
+    private LocalDate dataCriacao; 
+    private List<UsuarioDTO> usuarioVinculado;
+    private List<ProjetoDTO> projetoVinculado;
+    private Long idProjetoVinculado;
+    private Long idUsuarioVinculado;
 
     // Construtor padrão
     public AtividadeDTO() {}
 
     // Construtor com parâmetros
-    public AtividadeDTO(Long id, String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, 
-                         String status, Long idUsuarioResponsavel, LocalDateTime dataCriacao) {
+    public AtividadeDTO(Long id, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, 
+                         String status, Long idUsuarioResponsavel, LocalDate dataCriacao) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -57,19 +59,19 @@ public class AtividadeDTO {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getDataInicio() {
+    public LocalDate getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDateTime dataInicio) {
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public LocalDateTime getDataFim() {
+    public LocalDate getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(LocalDateTime dataFim) {
+    public void setDataFim(LocalDate dataFim) {
         this.dataFim = dataFim;
     }
 
@@ -89,27 +91,45 @@ public class AtividadeDTO {
         this.idUsuarioResponsavel = idUsuarioResponsavel;
     }
 
-    public LocalDateTime getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public ProjetoDTO getProjeto() {
-        return projeto;
+
+    public List<ProjetoDTO> getProjetoVinculado() {
+        return projetoVinculado;
     }
 
-    public void setProjeto(ProjetoDTO projeto) {
-        this.projeto = projeto;
+    public void setProjetoVinculado(List<ProjetoDTO> projetoVinculado) {
+        this.projetoVinculado = projetoVinculado;
     }
 
-    public List<UsuarioDTO> getUsuarios() {
-        return usuarios;
+    public List<UsuarioDTO> getUsuarioVinculado() {
+        return usuarioVinculado;
     }
 
-    public void setUsuarios(List<UsuarioDTO> usuarios) {
-        this.usuarios = usuarios;
+    public void setUsuarioVinculado(List<UsuarioDTO> usuarioVinculado) {
+        this.usuarioVinculado = usuarioVinculado;
     }
+
+    public Long getIdProjetoVinculado() {
+        return idProjetoVinculado;
+    }
+
+    public void setIdProjetoVinculado(Long idProjetoVinculado) {
+        this.idProjetoVinculado = idProjetoVinculado;
+    }
+
+    public Long getIdUsuarioVinculado() {
+        return idUsuarioVinculado;
+    }
+
+    public void setIdUsuarioVinculado(Long idUsuarioVinculado) {
+        this.idUsuarioVinculado = idUsuarioVinculado;
+    }
+
 }

@@ -3,18 +3,14 @@ package br.com.system.dothours.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-
 
 /*
  * Configuração de segurança do Spring Security para a aplicação.
@@ -62,7 +58,13 @@ public class SecurityConfig {
         .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/login").permitAll()  // Permite login e cadastro
-            .requestMatchers("/api/projetos/**").permitAll()  // Apenas ADMIN pode criar projetos
+            .requestMatchers(HttpMethod.GET,  "/api/projetos/**").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/api/projetos/**").permitAll()
+            .requestMatchers(HttpMethod.GET,  "/api/atividades/**").permitAll()
+            .requestMatchers(HttpMethod.POST,  "/api/atividades/**").permitAll()
+            .requestMatchers(HttpMethod.GET,  "/api/usuarios/**").permitAll()
+            .requestMatchers(HttpMethod.POST,  "/api/usuarios/**").permitAll()
+            .requestMatchers(HttpMethod.POST,  "/api/atividades/**").permitAll()
             .anyRequest().authenticated()  // Requer autenticação para outras rotas
         )
         .authenticationProvider(authenticationProvider)
@@ -73,32 +75,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-
-
-     /**
-     * Configura um codificador de senha utilizando o algoritmo BCrypt.
-     * 
-     * @return O codificador de senha.
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-
-
-    /**
-     * Configura o gerenciador de autenticação do Spring Security.
-     * 
-     * @param config A configuração do Spring Security.
-     * @return O gerenciador de autenticação configurado.
-     * @throws Exception Se ocorrer um erro ao configurar o gerenciador de autenticação.
-     */
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-
-        return config.getAuthenticationManager();
-
-    }
     
 }

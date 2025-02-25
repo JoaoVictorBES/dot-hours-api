@@ -21,6 +21,7 @@ import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.UsuarioRepository;
 import br.com.system.dothours.service.AtividadeService;
+import br.com.system.dothours.service.UsuarioService;
 
 
 
@@ -39,6 +40,9 @@ public class AtividadeController {
     @Autowired 
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     /**
      * Cria uma nova atividade com os dados fornecidos.
      *
@@ -46,17 +50,25 @@ public class AtividadeController {
      * @return A resposta HTTP com o status 201 (Created) e o DTO da atividade recém-criada.
      *         Caso ocorra um erro ao criar a atividade, retorna o status 400 (Bad Request) com a mensagem de erro.
      */
-     @PostMapping("/create")
+    
+    @PostMapping("/create")
     public ResponseEntity<?> criarAtividade(@RequestBody AtividadeDTO atividadeDTO) {
         try {
+            System.out.println("Recebendo dados da atividade: " + atividadeDTO);
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
 
-            Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            System.out.println("Usuário autenticado: " + username);
 
-            AtividadeDTO novaAtividade = atividadeService.create(atividadeDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novaAtividade);
+            Usuario usuario = usuarioService.buscarPorUsername(username);       
+
+            if (!usuario.getRole().equals("ADMIN")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Apenas administradores podem criar projetos.");
+            }
+
+            AtividadeDTO novaAtividadeDTO = atividadeService.create(atividadeDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novaAtividadeDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -69,7 +81,7 @@ public class AtividadeController {
      *
      * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs das atividades encontradas.
      */
-    @GetMapping("/findAll")
+    @GetMapping("/listAll")
     public ResponseEntity<List<AtividadeDTO>> findAll() {
 
         List<AtividadeDTO> atividades = atividadeService.findAll();

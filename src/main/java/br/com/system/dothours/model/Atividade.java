@@ -1,16 +1,16 @@
 package br.com.system.dothours.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,28 +24,27 @@ public class Atividade {
     @ManyToOne
     @JoinColumn(name = "id_projeto", nullable = false, referencedColumnName = "id")
     private Projeto projeto;
-
     private String nome;
     private String descricao;
-    private LocalDateTime dataInicio;
-    private LocalDateTime dataFim;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
     private String status;
     
     @ManyToOne
     @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
     private Usuario usuarioResponsavel;
-    
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
-    @ManyToMany(mappedBy = "atividades")
-    private List<Usuario> usuarios = new ArrayList<>();
-
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacao = LocalDate.now(); // Define automaticamente a data de criação
+    }
 
     public Atividade() {
         
     }
 
-    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, String status, Usuario usuarioResponsavel, LocalDateTime dataCriacao) {
+    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, String status, Usuario usuarioResponsavel, LocalDate dataCriacao) {
         this.id = id;
         this.projeto = projeto;
         this.nome = nome;
@@ -89,19 +88,19 @@ public class Atividade {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getDataInicio() {
+    public LocalDate getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDateTime dataInicio) {
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public LocalDateTime getDataFim() {
+    public LocalDate getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(LocalDateTime dataFim) {
+    public void setDataFim(LocalDate dataFim) {
         this.dataFim = dataFim;
     }
 
@@ -122,19 +121,12 @@ public class Atividade {
     }
 
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public LocalDateTime getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(LocalDateTime dataCriacao) {
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 

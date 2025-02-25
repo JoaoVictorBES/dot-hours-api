@@ -40,6 +40,6 @@ public class JwtConfig {
      * O tempo de expiração do token, em horas.
      * Este valor define quanto tempo o token será válido após sua criação.
      */
-	public static final int HORAS_EXPIRACAO_TOKEN = 1;
+	public static final int HORAS_EXPIRACAO_TOKEN = 5;
 
 }
