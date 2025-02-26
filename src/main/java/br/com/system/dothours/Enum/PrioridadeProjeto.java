@@ -1,4 +1,4 @@
-package br.com.system.Enum;
+package br.com.system.dothours.Enum;
 
 public enum PrioridadeProjeto {
 

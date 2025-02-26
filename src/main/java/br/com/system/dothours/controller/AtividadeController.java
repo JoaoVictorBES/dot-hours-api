@@ -63,8 +63,8 @@ public class AtividadeController {
 
             Usuario usuario = usuarioService.buscarPorUsername(username);       
 
-            if (!usuario.getRole().equals("ADMIN")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Apenas administradores podem criar projetos.");
+            if (usuario == null || usuario.getRole() == null || !usuario.getRole().equals("ADMIN")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Apenas administradores podem criar atividades.");
             }
 
             AtividadeDTO novaAtividadeDTO = atividadeService.create(atividadeDTO);

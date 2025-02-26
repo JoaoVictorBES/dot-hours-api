@@ -3,6 +3,7 @@ package br.com.system.dothours.model;
 import java.time.LocalDateTime;
 
 import br.com.system.dothours.dto.LancamentoHorasDTO;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,7 @@ public class LancamentoHoras {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_lancamento")
     private Long id;
     
     @ManyToOne
@@ -27,9 +29,16 @@ public class LancamentoHoras {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "descricao", nullable = false)
     private String descricao;
+
+    @Column(name = "data_inicio", nullable = false)
     private LocalDateTime dataInicio;
+
+    @Column(name = "data_fim", nullable = false)
     private LocalDateTime dataFim;
+
+    @Column(name = "data_registro", nullable = false, updatable = false)
     private LocalDateTime dataRegistro;
 
 

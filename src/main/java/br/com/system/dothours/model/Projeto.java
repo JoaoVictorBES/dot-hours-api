@@ -3,8 +3,9 @@ package br.com.system.dothours.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.system.Enum.PrioridadeProjeto;
-import br.com.system.Enum.StatusProjeto;
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.StatusProjeto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,27 +26,37 @@ public class Projeto {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_projeto")
     private Long id;
     
+    @Column(name = "nome_projeto", nullable = false, length = 100)
     private String nome;
+
+    @Column(name = "descricao_projeto", nullable = false)
     private String descricao;
+
+    @Column(name = "data_inicio")
     private LocalDate dataInicio;
+
+    @Column(name = "data_fim")
     private LocalDate dataFim;
 
     @Enumerated(EnumType.ORDINAL) 
+    @Column(name = "status_projeto", nullable = false)
     private StatusProjeto status;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id_usuario", nullable = false)
     private Usuario usuarioResponsavel; 
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDate dataCriacao;
 
     @Enumerated(EnumType.STRING) 
+    @Column(name = "prioridade_projeto", nullable = false)
     private PrioridadeProjeto prioridade;
 
-    @OneToMany(mappedBy = "projeto", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projeto", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Atividade> atividades;
 
     public Projeto() {}

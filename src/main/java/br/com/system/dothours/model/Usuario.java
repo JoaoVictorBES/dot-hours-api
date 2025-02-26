@@ -26,22 +26,38 @@ public class Usuario implements UserDetails {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_usuario")
     private Long id; 
+
+    @Column(name = "nome_usuario", nullable = false, unique = true, length = 50)
     private String username;
+
+    @Column(name = "email_usuario", nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(name = "senha_usuario", nullable = false)
     private String password;
+
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
+
+    @Column(name = "ultimo_login")
     private LocalDateTime ultimoLogin;
+
+    @Column(name = "role")
     private String role;
+
+    @Column(name = "recovery_token")
     private String recoveryToken; 
+
+    @Column(name = "token_expiration")
     private LocalDateTime tokenExpiration;
 
     @ManyToMany
     @JoinTable(
         name = "atividades_usuarios",
-        joinColumns = @JoinColumn(name = "usuario_id"),
-        inverseJoinColumns = @JoinColumn(name = "atividade_id")
+        joinColumns = @JoinColumn(name = "id_usuario"),
+        inverseJoinColumns = @JoinColumn(name = "id_atividade")
     )
     private List<Atividade> atividades = new ArrayList<>();
 

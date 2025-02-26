@@ -1,6 +1,9 @@
-package br.com.system.Enum;
+package br.com.system.dothours.Enum;
 
-public enum StatusProjeto {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public enum StatusAtividade {
 
     PENDENTE(0),
     EM_ANDAMENTO(1),
@@ -9,16 +12,18 @@ public enum StatusProjeto {
 
     private final int codigo;
 
-    StatusProjeto(int codigo) {
+    StatusAtividade(int codigo) {
         this.codigo = codigo;
     }
 
+    @JsonValue
     public int getCodigo() {
         return codigo;
     }
 
-    public static StatusProjeto fromCodigo(int codigo) {
-        for (StatusProjeto status : StatusProjeto.values()) {
+    @JsonCreator
+    public static StatusAtividade fromCodigo(int codigo) {
+        for (StatusAtividade status : StatusAtividade.values()) {
             if (status.getCodigo() == codigo) {
                 return status;
             }

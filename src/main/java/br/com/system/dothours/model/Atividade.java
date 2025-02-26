@@ -2,13 +2,14 @@ package br.com.system.dothours.model;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -19,20 +20,33 @@ public class Atividade {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_atividade")
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "id_projeto", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "id_projeto", nullable = false, referencedColumnName = "id_projeto")
     private Projeto projeto;
+
+    @Column(name = "nome_atividade", nullable = false, length = 100)
     private String nome;
+
+    @Column(name = "descricao_atividade", nullable = false)
     private String descricao;
+
+    @Column(name = "data_inicio")
     private LocalDate dataInicio;
+
+    @Column(name = "data_fim")
     private LocalDate dataFim;
+
+    @Column(name = "status_atividade", nullable = false, length = 50)
     private String status;
-    
+
     @ManyToOne
-    @JoinColumn(name = "id_usuario_responsavel", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_usuario_responsavel", nullable = false, referencedColumnName = "id_usuario")
     private Usuario usuarioResponsavel;
+
+    @Column(name = "data_criacao", nullable = false)
     private LocalDate dataCriacao;
 
     @PrePersist
@@ -129,8 +143,6 @@ public class Atividade {
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
-
-    
 
     
 }

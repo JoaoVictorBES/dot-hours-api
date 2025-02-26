@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.repository.AtividadeUsuarioRepository;
 
+
 @Service
 public class AtividadeUsuarioService {
 

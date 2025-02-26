@@ -3,8 +3,8 @@ package br.com.system.dothours.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.system.Enum.PrioridadeProjeto;
-import br.com.system.Enum.StatusProjeto;
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.StatusProjeto;
 
 
 

@@ -2,9 +2,11 @@ package br.com.system.dothours.service;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -53,22 +55,25 @@ public class AtividadeService {
      * @throws RuntimeException Se ocorrer algum erro ao salvar a atividade.
      */
     public AtividadeDTO create(AtividadeDTO atividadeDTO) {
-        // Obtendo o usuário autenticado
+    // Obtendo o usuário autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Usuário não autenticado");
+        }
         String username = authentication.getName();
-    
+
+        // Buscar o usuário no banco
         Usuario usuarioResponsavel = usuarioRepository.findByUsername(username)
             .orElseThrow(() -> new RuntimeException("Usuário responsável não encontrado"));
-    
+
         // Validação do projeto
-        if (atividadeDTO.getIdProjetoVinculado() == null ) {
+        if (atividadeDTO.getIdProjetoVinculado() == null) {
             throw new IllegalArgumentException("O projeto não pode ser nulo ou vazio.");
         }
-    
-        //ProjetoDTO projetoDTO = atividadeDTO.getProjetoVinculado().get(0); // Pegando o primeiro projeto da lista
+
         Projeto projeto = projetoRepository.findById(atividadeDTO.getIdProjetoVinculado())
             .orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
-           
+
         // Criando nova atividade
         Atividade atividade = new Atividade();
         atividade.setNome(atividadeDTO.getNome());
@@ -78,28 +83,31 @@ public class AtividadeService {
         atividade.setStatus(atividadeDTO.getStatus());
         atividade.setDataCriacao(LocalDate.now());
         atividade.setProjeto(projeto);
-        atividade.setUsuarioResponsavel(usuarioResponsavel);
-    
+        atividade.setUsuarioResponsavel(usuarioResponsavel); // << Agora está inicializado corretamente
+
         Atividade atividadeSalva = atividadesRepository.save(atividade);
 
         // Associando usuários vinculados à atividade
-       if (atividadeDTO.getUsuarioVinculado() != null && !atividadeDTO.getUsuarioVinculado().isEmpty()) {
-        for (UsuarioDTO usuarioDTO : atividadeDTO.getUsuarioVinculado()) {
-        Usuario usuario = usuarioRepository.findById(usuarioDTO.getId())
-            .orElseThrow(() -> new RuntimeException("Usuário com ID " + usuarioDTO.getId() + " não encontrado"));
+        if (atividadeDTO.getUsuarioVinculado() != null && !atividadeDTO.getUsuarioVinculado().isEmpty()) {
+            List<AtividadeUsuario> atividadeUsuarios = atividadeDTO.getUsuarioVinculado().stream()
+                .map(usuarioDTO -> {
+            Usuario usuario = usuarioRepository.findById(usuarioDTO.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário com ID " + usuarioDTO.getId() + " não encontrado"));
 
-        AtividadeUsuario atvUser = new AtividadeUsuario();
-        atvUser.setUsuario(usuario); // << Aqui agora passa o objeto correto
-        atvUser.setAtividade(atividadeSalva); // << Aqui agora passa o objeto correto
-        atvUser.setAtivo(true);
+                AtividadeUsuario atividadeUser = new AtividadeUsuario();
+                atividadeUser.setUsuario(usuario);
+                atividadeUser.setAtividade(atividadeSalva);
+                atividadeUser.setAtivo(true);
+                return atividadeUser;
+            })
+            .collect(Collectors.toList());
 
-        atividadeUsuarioRepository.save(atvUser);
-    }
-}
-    
-        // Salvando a atividade no banco
+            atividadeUsuarioRepository.saveAll(atividadeUsuarios);
+        }
+
         return convertToDTO(atividadeSalva);
     }
+
     
 
 
@@ -178,10 +186,15 @@ public class AtividadeService {
         dto.setDataInicio(atividade.getDataInicio());
         dto.setDataFim(atividade.getDataFim());
         dto.setStatus(atividade.getStatus());
-        dto.setIdUsuarioResponsavel(atividade.getUsuarioResponsavel().getId());
         dto.setDataCriacao(atividade.getDataCriacao());
     
-        // Convertendo o projeto vinculado para DTO
+        // Prevenção contra NullPointerException
+        if (atividade.getUsuarioResponsavel() != null) {
+            dto.setIdUsuarioResponsavel(atividade.getUsuarioResponsavel().getId());
+        } else {
+            dto.setIdUsuarioResponsavel(null); // Ou trate como necessário
+        }
+    
         if (atividade.getProjeto() != null) {
             ProjetoDTO projetoDTO = new ProjetoDTO();
             projetoDTO.setId(atividade.getProjeto().getId());
@@ -193,25 +206,28 @@ public class AtividadeService {
             projetoDTO.setPrioridade(atividade.getProjeto().getPrioridade());
             projetoDTO.setDataCriacao(atividade.getProjeto().getDataCriacao());
     
-            dto.setProjetoVinculado(Collections.singletonList(projetoDTO)); // Convertendo para lista
+            dto.setProjetoVinculado(Collections.singletonList(projetoDTO));
         }
     
         // Convertendo usuários vinculados para DTO
-        /*if (atividade.getUsuarios() != null) {
-            List<UsuarioDTO> usuariosDTO = atividade.getUsuarios().stream().map(usuario -> {
+        List<UsuarioDTO> usuariosDTO = atividadeUsuarioRepository.findByAtividade(atividade)
+            .stream()
+            .map(atividadeUsuario -> {
+                Usuario usuario = atividadeUsuario.getUsuario();
                 UsuarioDTO usuarioDTO = new UsuarioDTO();
                 usuarioDTO.setId(usuario.getId());
                 usuarioDTO.setUsername(usuario.getUsername());
                 usuarioDTO.setEmail(usuario.getEmail());
                 usuarioDTO.setUltimoLogin(usuario.getUltimoLogin());
                 return usuarioDTO;
-            }).collect(Collectors.toList());
+            })
+            .collect(Collectors.toList());
     
-            dto.setUsuarioVinculado(usuariosDTO);
-        }*/
+        dto.setUsuarioVinculado(usuariosDTO);
     
         return dto;
     }
+    
     
 
 

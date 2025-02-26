@@ -1,5 +1,6 @@
 package br.com.system.dothours.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,31 +13,33 @@ public class AtividadeUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_atividade_usuario")
     private Long id; 
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false, referencedColumnName = "id")
-    private Usuario Usuario;
+    @JoinColumn(name = "id_usuario", nullable = false, referencedColumnName = "id_usuario")
+    private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "id_atividade", nullable = false, referencedColumnName = "id")
-    private Atividade Atividade;
+    @JoinColumn(name = "id_atividade", nullable = false, referencedColumnName = "id_atividade")
+    private Atividade atividade;
+    
     private boolean ativo = false;
 
     public AtividadeUsuario() {
     }
 
-    public AtividadeUsuario(Usuario Usuario, Atividade Atividade) {
-        this.Usuario = Usuario;
-        this.Atividade = Atividade;
+    public AtividadeUsuario(Usuario usuario, Atividade atividade) {
+        this.usuario = usuario;
+        this.atividade = atividade;
     }
 
     public Usuario getUsuario() {
-        return Usuario;
+        return usuario;
     }
 
-    public void setUsuario(Usuario Usuario) {
-        this.Usuario = Usuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public boolean isAtivo() {
@@ -56,11 +59,11 @@ public class AtividadeUsuario {
     }
 
     public Atividade getAtividade() {
-        return Atividade;
+        return atividade;
     }
 
-    public void setAtividade(Atividade Atividade) {
-        this.Atividade = Atividade;
+    public void setAtividade(Atividade atividade) {
+        this.atividade = atividade;
     }
 
 

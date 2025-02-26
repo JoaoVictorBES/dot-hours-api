@@ -16,7 +16,7 @@ public class AtividadeDTO {
     private List<UsuarioDTO> usuarioVinculado;
     private List<ProjetoDTO> projetoVinculado;
     private Long idProjetoVinculado;
-    private Long idUsuarioVinculado;
+    private List<Long> idUsuariosVinculados;
 
     // Construtor padrão
     public AtividadeDTO() {}
@@ -124,12 +124,12 @@ public class AtividadeDTO {
         this.idProjetoVinculado = idProjetoVinculado;
     }
 
-    public Long getIdUsuarioVinculado() {
-        return idUsuarioVinculado;
+    public List<Long> getIdUsuariosVinculados() {
+        return idUsuariosVinculados;
     }
 
     public void setIdUsuarioVinculado(Long idUsuarioVinculado) {
-        this.idUsuarioVinculado = idUsuarioVinculado;
+        this.idUsuariosVinculados = idUsuariosVinculados;
     }
 
 }
