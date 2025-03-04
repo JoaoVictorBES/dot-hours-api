@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.system.dothours.dto.UsuarioCriadoDTO;
 import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.UsuarioService;
@@ -97,9 +96,9 @@ public class UsuarioController {
      * @return A resposta HTTP com o status 200 (OK) e o DTO do usuário atualizado, ou 404 (Not Found) caso não exista.
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UsuarioCriadoDTO usuarioCreateDTO) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
         try {
-            UsuarioDTO usuarioAtualizado = usuarioService.update(id, usuarioCreateDTO);
+            UsuarioDTO usuarioAtualizado = usuarioService.update(id, usuarioDTO);
             return ResponseEntity.ok(usuarioAtualizado);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");

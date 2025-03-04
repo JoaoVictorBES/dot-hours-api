@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,11 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import br.com.system.dothours.Enum.Role;
 
 import br.com.system.dothours.dto.LancamentoHorasDTO;
 import br.com.system.dothours.model.LancamentoHoras;
 import br.com.system.dothours.service.LancamentoHorasService;
+
 
 
 /**
@@ -27,7 +31,7 @@ import br.com.system.dothours.service.LancamentoHorasService;
  * Utiliza o serviço {@link LancamentoHorasService} para realizar a lógica de negócios.
  */
 @RestController
-@RequestMapping("/api/lancamento-horas")
+@RequestMapping("/api/lancar-horas")
 public class LancamentoHorasController {
 
     @Autowired
@@ -42,22 +46,33 @@ public class LancamentoHorasController {
      *         Caso ocorra um erro ao criar o lançamento, retorna o status 400 (Bad Request) com a mensagem de erro.
      */
     @PostMapping("/create")
-    public ResponseEntity<LancamentoHorasDTO> criarLancamento(@RequestBody LancamentoHorasDTO lancamentoHorasDTO) {
-        try {
-            // Convertendo DTO para a entidade
-            LancamentoHoras lancamentoHoras = LancamentoHoras.fromDTO(lancamentoHorasDTO);
-            LancamentoHoras novoLancamento = lancamentoHorasService.create(lancamentoHoras);
-            // Convertendo a entidade de volta para DTO para a resposta
-            LancamentoHorasDTO novoLancamentoDTO = LancamentoHorasDTO.fromEntity(novoLancamento);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoLancamentoDTO);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LancamentoHorasDTO(e.getMessage()));
-        }
-    }
-
-
-
-    /**
+    public ResponseEntity<LancamentoHorasDTO> criarLancamento(@RequestBody LancamentoHorasDTO lancamentoHorasDTO, Authentication authentication) {
+        System.out.println("Recebendo lançamento de horas: " + lancamentoHorasDTO);
+        System.out.println("Usuário autenticado: " + authentication.getName());
+                
+                try {
+                    // Convertendo DTO para a entidade
+                    LancamentoHoras lancamentoHoras = LancamentoHoras.fromReqDTO(lancamentoHorasDTO);
+                    System.out.println("🔄 Convertido para entidade: " + lancamentoHoras);
+        
+                    // Criando o lançamento no serviço
+                    LancamentoHoras novoLancamento = lancamentoHorasService.create(lancamentoHoras);
+                    System.out.println("✅ Lançamento salvo: " + novoLancamento);
+        
+                    // Convertendo a entidade de volta para DTO para a resposta
+                    LancamentoHorasDTO novoLancamentoDTO = LancamentoHorasDTO.fromEntity(novoLancamento);
+                    //novoLancamentoDTO.getUsuario().setRole(Role.ADMIN);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(novoLancamentoDTO);
+        
+                } catch (RuntimeException e) {
+        
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new LancamentoHorasDTO(e.getMessage()));
+        
+                }
+            }
+        
+        
+            /**
      * Lista todos os lançamentos de horas cadastrados.
      *
      * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs dos lançamentos de horas cadastrados.
@@ -72,8 +87,6 @@ public class LancamentoHorasController {
         return ResponseEntity.ok(lancamentosDTO);
 
     }
-
-
 
      /**
      * Retorna um lançamento de horas específico pelo seu ID.
@@ -107,7 +120,7 @@ public class LancamentoHorasController {
     public ResponseEntity<?> atualizarLancamento(@PathVariable Long id, @RequestBody LancamentoHorasDTO lancamentoAtualizadoDTO) {
 
         try {
-            LancamentoHoras lancamentoAtualizado = LancamentoHoras.fromDTO(lancamentoAtualizadoDTO);
+            LancamentoHoras lancamentoAtualizado = LancamentoHoras.fromReqDTO(lancamentoAtualizadoDTO);
             LancamentoHoras lancamento = lancamentoHorasService.update(id, lancamentoAtualizado);
             return ResponseEntity.ok(LancamentoHorasDTO.fromEntity(lancamento));
         } catch (RuntimeException e) {
@@ -135,5 +148,18 @@ public class LancamentoHorasController {
         }
 
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<LancamentoHorasDTO>> buscarLancamentos(@RequestParam(required = false) Long idUsuario, @RequestParam(required = false) String nomeAtividade) {
+
+        List<LancamentoHoras> lancamentos = lancamentoHorasService.buscarLancamentos(idUsuario, nomeAtividade);
+        
+        List<LancamentoHorasDTO> lancamentosDTO = lancamentos.stream()
+            .map(LancamentoHorasDTO::fromEntity)
+            .collect(Collectors.toList());
+    
+    return ResponseEntity.ok(lancamentosDTO);
+}
+
 
 }

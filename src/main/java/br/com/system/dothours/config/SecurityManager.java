@@ -1,5 +1,8 @@
 package br.com.system.dothours.config;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -72,16 +77,20 @@ public class SecurityManager {
      * Bean responsável por carregar os detalhes do usuário a partir do banco de dados.
      * O serviço de detalhes do usuário é utilizado pelo provedor de autenticação para validar as credenciais do usuário.
      * 
-     * @return Um {@link UserDetailsService} que carrega o usuário a partir do repositório de login.
+     * @return Um {UserDetailsService} que carrega o usuário a partir do repositório de login.
      */
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> loginRepository.findByUsername(username)
-            .map(usuario -> User.withUsername(usuario.getUsername())
-                .password(usuario.getPassword())
-                .roles(usuario.getRole())
-                .build()
-            )
+            .map(usuario -> {
+                //String role = "ROLE_" + usuario.getRole();
+
+                String role = usuario.getRole().getAuthority(); 
+
+                List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+
+                return new User(usuario.getUsername(), usuario.getPassword(), authorities);
+            })
             .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
 

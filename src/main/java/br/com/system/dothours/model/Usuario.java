@@ -3,14 +3,18 @@ package br.com.system.dothours.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import br.com.system.dothours.Enum.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +27,7 @@ import jakarta.persistence.Table;
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {
     
-    private static final long serialVersionUID = 1L;
+   // private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
@@ -44,8 +48,9 @@ public class Usuario implements UserDetails {
     @Column(name = "ultimo_login")
     private LocalDateTime ultimoLogin;
 
+    @Enumerated(EnumType.STRING) 
     @Column(name = "role")
-    private String role;
+    private Role role;
 
     @Column(name = "recovery_token")
     private String recoveryToken; 
@@ -73,7 +78,7 @@ public class Usuario implements UserDetails {
         this.password = password;
         this.dataCriacao = dataCriacao;
         this.ultimoLogin = ultimoLogin;
-        this.role = role;
+        
     }
 
     public Long getId() {
@@ -91,12 +96,12 @@ public class Usuario implements UserDetails {
     }
 
 
-    public LocalDateTime getDataCriaçao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriaçao(LocalDateTime dataCriaçao) {
-        this.dataCriacao = dataCriaçao;
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 
     public LocalDateTime getUltimoLogin() {
@@ -115,9 +120,6 @@ public class Usuario implements UserDetails {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
 
     public String getEmail() {
         return this.email;
@@ -133,10 +135,6 @@ public class Usuario implements UserDetails {
         return this.username;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public List<Atividade> getAtividades() {
         return atividades;
     }
@@ -145,13 +143,19 @@ public class Usuario implements UserDetails {
         this.atividades = atividades;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
     
     @Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> authorities = new ArrayList<>();
-	    authorities.add(new SimpleGrantedAuthority(this.role));
-	    return authorities;
-	}
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Retorna as authorities com base na role
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getAuthority()));
+    }
 
     @Override
 	public boolean isAccountNonExpired() {

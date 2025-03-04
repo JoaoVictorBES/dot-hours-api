@@ -21,6 +21,10 @@ public class AtividadeDTO {
     // Construtor padrão
     public AtividadeDTO() {}
 
+    public AtividadeDTO(Long id){
+        this.id = id;
+    }
+    
     // Construtor com parâmetros
     public AtividadeDTO(Long id, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, 
                          String status, Long idUsuarioResponsavel, LocalDate dataCriacao) {

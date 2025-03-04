@@ -1,11 +1,16 @@
 package br.com.system.dothours.config;
 
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -44,15 +49,11 @@ public class JwtServiceGenerator {
      * @return O token JWT gerado.
      */
     public String generateToken(Usuario userDetails) {
-	
-	  
-        // Payload no qual eu posso buscar o parametros que eu quero//
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("username", userDetails.getUsername());
         extraClaims.put("id", userDetails.getId().toString());
-        extraClaims.put("role", userDetails.getRole()); 
-        
-        
+        extraClaims.put("role", userDetails.getRole().getAuthority());  // Usando o getAuthority() do Role
+    
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -158,6 +159,20 @@ public class JwtServiceGenerator {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
+    public List<GrantedAuthority> extractAuthorities(String token) {
+    Claims claims = extractAllClaims(token);
+    List<String> roles = claims.get("authorities", List.class);
+    
+        if (roles == null) {
+            return Collections.emptyList();
+        }
+
+        return roles.stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
+    }
+
 
 
 }

@@ -7,11 +7,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.system.dothours.dto.UsuarioCriadoDTO;
+import br.com.system.dothours.Enum.Role;
 import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.UsuarioRepository;
@@ -50,14 +53,14 @@ public class UsuarioService {
             throw new IllegalArgumentException("Password é obrigatório");
         }
     
-        if (usuario.getRole() == null || usuario.getRole().isEmpty()) {
-            usuario.setRole("USER");
+        if (usuario.getRole() == null ) {
+            usuario.setRole(Role.USER);
         }
     
         
     
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuario.setDataCriaçao(LocalDateTime.now());
+        usuario.setDataCriacao(LocalDateTime.now());
     
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
     
@@ -98,12 +101,11 @@ public class UsuarioService {
      * @return {@link UsuarioDTO} atualizado.
      * @throws RuntimeException Se o usuário não for encontrado.
      */
-    public UsuarioDTO update(Long id, UsuarioCriadoDTO usuarioCreateDTO) {
+    public UsuarioDTO update(Long id, UsuarioDTO usuarioDTO) {
         return usuarioRepository.findById(id).map(usuario -> {
-            usuario.setUsername(usuarioCreateDTO.getUsername());
-            usuario.setEmail(usuarioCreateDTO.getEmail());
-            usuario.setPassword(usuarioCreateDTO.getPassword());
-            usuario.setRole(usuarioCreateDTO.getRole());
+            usuario.setUsername(usuarioDTO.getUsername());
+            usuario.setEmail(usuarioDTO.getEmail());
+            usuario.setRole(usuarioDTO.getRole());
 
             usuarioRepository.save(usuario);
             return UsuarioDTO.fromEntity(usuario);
@@ -127,6 +129,22 @@ public class UsuarioService {
     public Usuario buscarPorUsername(String username) {
         return usuarioRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o username: " + username));
+    }
+
+    public Usuario findByEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
+    }
+
+
+    public UserDetails getUsuarioLogado() {
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    
+            if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+                return (UserDetails) authentication.getPrincipal();
+            }
+            
+            throw new RuntimeException("Usuário não está autenticado.");
     }
 
 }

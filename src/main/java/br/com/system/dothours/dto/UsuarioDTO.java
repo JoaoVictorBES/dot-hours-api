@@ -2,45 +2,48 @@ package br.com.system.dothours.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import br.com.system.dothours.Enum.Role;
 import br.com.system.dothours.model.Usuario;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UsuarioDTO {
 
     private Long id;
     private String username;
-    private String password;
     private String email;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataCriacao;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime ultimoLogin;
-    private String role;
+    private Role role;
 
-    public UsuarioDTO(){
-        
-    }
-
-    public UsuarioDTO(Long id, String username, String password, String email, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, String role) {
+    public UsuarioDTO(Long id, String username, String email, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, Role role) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.dataCriacao = dataCriacao;
         this.ultimoLogin = ultimoLogin;
         this.role = role;
     }
 
+    // Método para converter o modelo para DTO
     public static UsuarioDTO fromEntity(Usuario usuario) {
         return new UsuarioDTO(
             usuario.getId(),
             usuario.getUsername(),
-            usuario.getPassword(),
             usuario.getEmail(),
-            usuario.getDataCriaçao(),
+            usuario.getDataCriacao(),
             usuario.getUltimoLogin(),
-            usuario.getRole()
+            usuario.getRole()// Convertendo o Role para String
         );
     }
 
+    // Getters e setters
     public Long getId() {
         return id;
     }
@@ -81,22 +84,14 @@ public class UsuarioDTO {
         this.ultimoLogin = ultimoLogin;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
     
 }
+

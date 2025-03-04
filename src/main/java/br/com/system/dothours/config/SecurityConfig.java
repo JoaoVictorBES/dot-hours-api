@@ -65,6 +65,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET,  "/api/usuarios/**").permitAll()
             .requestMatchers(HttpMethod.POST,  "/api/usuarios/**").permitAll()
             .requestMatchers(HttpMethod.POST,  "/api/atividades/**").permitAll()
+            .requestMatchers(HttpMethod.POST,  "/api/lancar-horas/**").permitAll()
+            .requestMatchers(HttpMethod.GET,  "/api/lancar-horas/**").permitAll()
             .anyRequest().authenticated()  // Requer autenticação para outras rotas
         )
         .authenticationProvider(authenticationProvider)

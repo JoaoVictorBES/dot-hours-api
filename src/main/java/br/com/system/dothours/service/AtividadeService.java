@@ -2,7 +2,6 @@ package br.com.system.dothours.service;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -214,7 +213,7 @@ public class AtividadeService {
             .stream()
             .map(atividadeUsuario -> {
                 Usuario usuario = atividadeUsuario.getUsuario();
-                UsuarioDTO usuarioDTO = new UsuarioDTO();
+                UsuarioDTO usuarioDTO = new UsuarioDTO(null, null, null, null, null, null);
                 usuarioDTO.setId(usuario.getId());
                 usuarioDTO.setUsername(usuario.getUsername());
                 usuarioDTO.setEmail(usuario.getEmail());

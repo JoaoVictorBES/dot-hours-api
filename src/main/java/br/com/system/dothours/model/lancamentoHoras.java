@@ -1,6 +1,8 @@
 package br.com.system.dothours.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import br.com.system.dothours.dto.LancamentoHorasDTO;
 import jakarta.persistence.Column;
@@ -39,14 +41,19 @@ public class LancamentoHoras {
     private LocalDateTime dataFim;
 
     @Column(name = "data_registro", nullable = false, updatable = false)
-    private LocalDateTime dataRegistro;
+    private LocalDate dataRegistro;
+
+    @Column(name = "tempo_duracao", nullable = false)
+    private LocalTime tempoDuracao;
 
 
     public LancamentoHoras() {
 
     }
 
-    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, LocalDateTime dataRegistro) {
+    
+
+    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, LocalDate dataRegistro) {
         this.id = id;
         this.atividade = atividade;
         this.usuario = usuario;
@@ -56,18 +63,27 @@ public class LancamentoHoras {
         this.dataRegistro = dataRegistro;
     }
 
-    public static LancamentoHoras fromDTO(LancamentoHorasDTO dto) {
+    public static LancamentoHoras fromReqDTO (LancamentoHorasDTO dto){
+        Atividade atividade = new Atividade();
+        Usuario usuario = new Usuario();
         LancamentoHoras lancamentoHoras = new LancamentoHoras();
-        lancamentoHoras.setId(dto.getId());
-        lancamentoHoras.setAtividade(dto.getAtividade());
-        lancamentoHoras.setUsuario(dto.getUsuario());
+
+        atividade.setId(dto.getIdAtividade());
+        lancamentoHoras.setAtividade(atividade);
+
+        usuario.setId(dto.getIdUsuario());
+        lancamentoHoras.setUsuario(usuario);
+        
         lancamentoHoras.setDescricao(dto.getDescricao());
         lancamentoHoras.setDataInicio(dto.getDataInicio());
         lancamentoHoras.setDataFim(dto.getDataFim());
         lancamentoHoras.setDataRegistro(dto.getDataRegistro());
+        if (dto.getTempoDuracao() != null) {
+            lancamentoHoras.setTempoDuracao(LocalTime.parse(dto.getTempoDuracao().toString()));
+        }
+        
         return lancamentoHoras;
     }
-
 
     public Long getId() {
         return id;
@@ -117,12 +133,35 @@ public class LancamentoHoras {
         this.dataFim = dataFim;
     }
 
-    public LocalDateTime getDataRegistro() {
+    public LocalDate getDataRegistro() {
         return dataRegistro;
     }
 
-    public void setDataRegistro(LocalDateTime dataRegistro) {
+    public void setDataRegistro(LocalDate dataRegistro) {
         this.dataRegistro = dataRegistro;
     }
+
+    public LocalTime getTempoDuracao() {
+        return tempoDuracao;
+    }
+
+    public void setTempoDuracao(LocalTime tempoDuracao) {
+        this.tempoDuracao = tempoDuracao;
+    }
+
+    @Override
+    public String toString() {
+        return "LancamentoHoras{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                ", dataInicio=" + dataInicio +
+                ", dataFim=" + dataFim +
+                ", dataRegistro=" + dataRegistro +
+                ", idAtividade=" + atividade +
+                ", idUsuario=" + usuario +
+                ", tempoDuracao=" + tempoDuracao +
+                '}';
+    }
+
 
 }

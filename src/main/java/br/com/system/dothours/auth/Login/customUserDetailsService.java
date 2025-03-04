@@ -23,10 +23,13 @@ public class customUserDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
+         // Usando o método getAuthority() do enum Role para obter a string correspondente
+        String role = usuario.getRole().getAuthority();
+
         return new org.springframework.security.core.userdetails.User(
                 usuario.getUsername(),
                 usuario.getPassword(), // Retorna a senha criptografada
-                Collections.singletonList(new SimpleGrantedAuthority(usuario.getRole()))
+                Collections.singletonList(new SimpleGrantedAuthority(role))
         );
     }
 

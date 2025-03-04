@@ -1,6 +1,6 @@
 package br.com.system.dothours.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +16,8 @@ public class LancamentoHorasService {
     @Autowired
     private LancamentoHorasRepository lancamentoHorasRepository;
 
-    
+   // @Autowired
+    //private UsuarioService usuarioService;
 
       /**
      * Cria um novo registro de lançamento de horas.
@@ -26,8 +27,12 @@ public class LancamentoHorasService {
      * @return {@link LancamentoHoras} salvo no banco de dados.
      */
     public LancamentoHoras create(LancamentoHoras lancamentoHoras) {
+        // Se o ID do usuário foi enviado pelo frontend, mantém; senão, deixa nulo
+        if (lancamentoHoras.getUsuario() == null || lancamentoHoras.getUsuario().getId() == null) {
+            lancamentoHoras.setUsuario(null); // Lançamento sem usuário autenticado
+        }
 
-        lancamentoHoras.setDataRegistro(LocalDateTime.now()); 
+        lancamentoHoras.setDataRegistro(LocalDate.now());
         return lancamentoHorasRepository.save(lancamentoHoras);
 
     }
@@ -97,6 +102,18 @@ public class LancamentoHorasService {
             throw new RuntimeException("Lançamento de horas não encontrado com ID: " + id);
         }
 
+    }
+
+    public List<LancamentoHoras> buscarLancamentos(Long idUsuario, String nomeAtividade) {
+        if (idUsuario != null && nomeAtividade != null) {
+            return lancamentoHorasRepository.findByUsuarioIdAndAtividadeNome(idUsuario, nomeAtividade);
+        } else if (idUsuario != null) {
+            return lancamentoHorasRepository.findByUsuarioId(idUsuario);
+        } else if (nomeAtividade != null) {
+            return lancamentoHorasRepository.findByAtividadeNome(nomeAtividade);
+        } else {
+            return lancamentoHorasRepository.findAll();
+        }
     }
 
 }
