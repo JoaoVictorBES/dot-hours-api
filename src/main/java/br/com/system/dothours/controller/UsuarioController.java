@@ -1,8 +1,10 @@
 package br.com.system.dothours.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.system.dothours.Enum.Role;
 import br.com.system.dothours.dto.UsuarioDTO;
+import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.UsuarioService;
 
@@ -121,5 +126,20 @@ public class UsuarioController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado!");
         }
+    }
+
+    @GetMapping("/findByFilters")
+    public ResponseEntity<List<UsuarioDTO>> findByFilters(
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) Role role,
+        @RequestParam(required = false) Atividade atividade,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ultimoLogin) {
+
+        List<UsuarioDTO> usuarios = usuarioService.findByFilters(nome, role, atividade, ultimoLogin);
+        
+        if (usuarios.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(usuarios);
     }
 }

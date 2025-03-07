@@ -1,5 +1,6 @@
 package br.com.system.dothours.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.Role;
+import br.com.system.dothours.Enum.StatusProjeto;
 import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.ProjetoService;
@@ -48,7 +53,7 @@ public class ProjetoController {
         
             Usuario usuario = usuarioService.buscarPorUsername(username); 
 
-            if (!usuario.getRole().equals("ADMIN")) {
+            if (!usuario.getRole().equals(Role.ADMIN)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Apenas administradores podem criar projetos.");
             }
             projetoDTO.setIdUsuarioResponsavel(usuario.getId());
@@ -131,6 +136,17 @@ public class ProjetoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProjetoDTO>> filtrarProjetos(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) StatusProjeto status,
+            @RequestParam(required = false) PrioridadeProjeto prioridade,
+            @RequestParam(required = false) LocalDate dataInicio) {
+
+        List<ProjetoDTO> projetos = projetoService.findByFilters(nome, status, prioridade, dataInicio);
+        return ResponseEntity.ok(projetos);
     }
 
 }

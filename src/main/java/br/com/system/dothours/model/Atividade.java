@@ -2,10 +2,14 @@ package br.com.system.dothours.model;
 
 
 import java.time.LocalDate;
-import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import br.com.system.dothours.Enum.StatusAtividade;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,15 +43,22 @@ public class Atividade {
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
-    @Column(name = "status_atividade", nullable = false, length = 50)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_atividade", nullable = false)
+    private StatusAtividade status;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario_responsavel", nullable = false, referencedColumnName = "id_usuario")
+    @JsonBackReference 
     private Usuario usuarioResponsavel;
 
     @Column(name = "data_criacao", nullable = false)
     private LocalDate dataCriacao;
+
+    @Column(name = "ativo", nullable = false, columnDefinition = "TINYINT(1)")
+    private Boolean ativo; // Define como ativo por padrão
+
+
 
     @PrePersist
     public void prePersist() {
@@ -58,7 +69,7 @@ public class Atividade {
         
     }
 
-    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, String status, Usuario usuarioResponsavel, LocalDate dataCriacao) {
+    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, StatusAtividade status, Usuario usuarioResponsavel, LocalDate dataCriacao) {
         this.id = id;
         this.projeto = projeto;
         this.nome = nome;
@@ -118,11 +129,11 @@ public class Atividade {
         this.dataFim = dataFim;
     }
 
-    public String getStatus() {
+    public StatusAtividade getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAtividade status) {
         this.status = status;
     }
 
@@ -142,6 +153,15 @@ public class Atividade {
 
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    // Getters e Setters
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
     

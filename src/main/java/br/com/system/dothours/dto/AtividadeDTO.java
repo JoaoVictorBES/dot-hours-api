@@ -3,6 +3,8 @@ package br.com.system.dothours.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.system.dothours.Enum.StatusAtividade;
+
 public class AtividadeDTO {
 
     private Long id;
@@ -10,13 +12,14 @@ public class AtividadeDTO {
     private String descricao;
     private LocalDate dataInicio;
     private LocalDate dataFim;
-    private String status;
+    private StatusAtividade status;
     private Long idUsuarioResponsavel;
     private LocalDate dataCriacao; 
     private List<UsuarioDTO> usuarioVinculado;
     private List<ProjetoDTO> projetoVinculado;
     private Long idProjetoVinculado;
     private List<Long> idUsuariosVinculados;
+    private Boolean ativo;
 
     // Construtor padrão
     public AtividadeDTO() {}
@@ -27,7 +30,7 @@ public class AtividadeDTO {
     
     // Construtor com parâmetros
     public AtividadeDTO(Long id, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, 
-                         String status, Long idUsuarioResponsavel, LocalDate dataCriacao) {
+                         StatusAtividade status, Long idUsuarioResponsavel, LocalDate dataCriacao) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -79,11 +82,11 @@ public class AtividadeDTO {
         this.dataFim = dataFim;
     }
 
-    public String getStatus() {
+    public StatusAtividade getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAtividade status) {
         this.status = status;
     }
 
@@ -134,6 +137,31 @@ public class AtividadeDTO {
 
     public void setIdUsuarioVinculado(Long idUsuarioVinculado) {
         this.idUsuariosVinculados = idUsuariosVinculados;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    @Override
+    public String toString() {
+        return "AtividadeDTO{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            ", descricao='" + descricao + '\'' +
+            ", dataInicio=" + dataInicio +
+            ", dataFim=" + dataFim +
+            ", status=" + status +
+            ", idUsuarioResponsavel=" + idUsuarioResponsavel +
+            ", dataCriacao=" + dataCriacao +
+            ", idProjetoVinculado=" + idProjetoVinculado +
+            ", idUsuariosVinculados=" + idUsuariosVinculados +
+            ", ativo=" + ativo +
+            '}';
     }
 
 }

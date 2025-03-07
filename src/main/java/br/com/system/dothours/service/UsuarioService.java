@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.Enum.Role;
 import br.com.system.dothours.dto.UsuarioDTO;
+import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.UsuarioRepository;
 
@@ -145,6 +146,23 @@ public class UsuarioService {
             }
             
             throw new RuntimeException("Usuário não está autenticado.");
+    }
+
+    public List<UsuarioDTO> findByFilters(String nome, Role role, Atividade atividade, LocalDateTime ultimoLogin) {
+        
+        List<Usuario> usuarios;
+
+        if (role != null) {
+            usuarios = usuarioRepository.findByRole(role);
+        } else if (atividade != null) {
+            usuarios = usuarioRepository.findByAtividades(atividade);
+        } else if (ultimoLogin != null) {
+            usuarios = usuarioRepository.findByUltimoLoginAfter(ultimoLogin);
+        } else {
+            usuarios = usuarioRepository.findAll();
+        }
+
+        return usuarios.stream().map(UsuarioDTO::fromEntity).collect(Collectors.toList());
     }
 
 }

@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.StatusAtividade;
 import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.dto.UsuarioDTO;
@@ -70,6 +72,10 @@ public class AtividadeService {
             throw new IllegalArgumentException("O projeto não pode ser nulo ou vazio.");
         }
 
+        if (atividadeDTO.getDataCriacao() == null) {
+            atividadeDTO.setDataCriacao(LocalDate.now());
+        }
+
         Projeto projeto = projetoRepository.findById(atividadeDTO.getIdProjetoVinculado())
             .orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
 
@@ -79,7 +85,7 @@ public class AtividadeService {
         atividade.setDescricao(atividadeDTO.getDescricao());
         atividade.setDataInicio(atividadeDTO.getDataInicio());
         atividade.setDataFim(atividadeDTO.getDataFim());
-        atividade.setStatus(atividadeDTO.getStatus());
+        atividade.setStatus(StatusAtividade.valueOf(atividadeDTO.getStatus().name()));
         atividade.setDataCriacao(LocalDate.now());
         atividade.setProjeto(projeto);
         atividade.setUsuarioResponsavel(usuarioResponsavel); // << Agora está inicializado corretamente
@@ -226,12 +232,7 @@ public class AtividadeService {
     
         return dto;
     }
-    
-    
-
-
-
-
+  
     
      /**
      * Retorna uma lista de atividades associadas a um projeto específico.
@@ -245,8 +246,6 @@ public class AtividadeService {
                 .map(this::convertToDTO)
                 .toList();
     }
-
-
 
 
     /**
@@ -264,6 +263,38 @@ public class AtividadeService {
                 .map(this::convertToDTO)
                 .toList();
 
+    }
+
+    public void alterarStatusAtividade(Long id, boolean ativo) {
+        Atividade atividade = atividadesRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Atividade não encontrada!"));
+
+        atividade.setAtivo(ativo);
+        atividadesRepository.save(atividade);
+    }
+
+
+    public List<AtividadeDTO> listarAtividadesAtivas() {
+        List<AtividadeDTO> atividades = atividadesRepository.findByAtivoTrue().stream().map(this::convertToDTO).toList();
+        System.out.println("Atividades ativas encontradas: " + atividades.size());
+        return atividades;
+    }
+
+    /**
+     * Busca atividades com base em filtros.
+     * 
+     * @param nome O nome da atividade (opcional).
+     * @param status O status da atividade (opcional).
+     * @param prioridade A prioridade do projeto (opcional).
+     * @param dataInicio A data de início da atividade (opcional).
+     * @param dataFim A data de fim da atividade (opcional).
+     * @return Lista de atividades que atendem aos filtros.
+     */
+    public List<AtividadeDTO> findByFilters(String nome, StatusAtividade status, 
+                                            PrioridadeProjeto prioridade, LocalDate dataInicio, 
+                                            LocalDate dataFim) {
+        List<Atividade> atividades = atividadesRepository.findByFilters(nome, status, prioridade, dataInicio, dataFim);
+        return atividades.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
 }

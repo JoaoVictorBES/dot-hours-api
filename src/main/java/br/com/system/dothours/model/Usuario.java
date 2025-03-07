@@ -10,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.system.dothours.Enum.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,6 +66,7 @@ public class Usuario implements UserDetails {
         joinColumns = @JoinColumn(name = "id_usuario"),
         inverseJoinColumns = @JoinColumn(name = "id_atividade")
     )
+    @JsonManagedReference
     private List<Atividade> atividades = new ArrayList<>();
 
     

@@ -1,10 +1,12 @@
 package br.com.system.dothours.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -150,16 +152,21 @@ public class LancamentoHorasController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<LancamentoHorasDTO>> buscarLancamentos(@RequestParam(required = false) Long idUsuario, @RequestParam(required = false) String nomeAtividade) {
+        public ResponseEntity<List<LancamentoHorasDTO>> buscarLancamentos(
+            @RequestParam(required = false) Long idUsuario, 
+            @RequestParam(required = false) String nomeAtividade,
+            @RequestParam(required = false) Long idAtividade,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataRegistro
+            ) {
 
-        List<LancamentoHoras> lancamentos = lancamentoHorasService.buscarLancamentos(idUsuario, nomeAtividade);
+            List<LancamentoHoras> lancamentos = lancamentoHorasService.buscarLancamentos(idUsuario, idAtividade, nomeAtividade, dataRegistro);
+            
+            List<LancamentoHorasDTO> lancamentosDTO = lancamentos.stream()
+                .map(LancamentoHorasDTO::fromEntity)
+                .collect(Collectors.toList());
         
-        List<LancamentoHorasDTO> lancamentosDTO = lancamentos.stream()
-            .map(LancamentoHorasDTO::fromEntity)
-            .collect(Collectors.toList());
-    
-    return ResponseEntity.ok(lancamentosDTO);
-}
+        return ResponseEntity.ok(lancamentosDTO);
+    }
 
 
 }

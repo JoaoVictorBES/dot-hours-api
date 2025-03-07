@@ -1,16 +1,13 @@
 package br.com.system.dothours.Enum;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum StatusAtividade {
 
-    PENDENTE(0),
-    EM_ANDAMENTO(1),
-    CONCLUIDO(2),
-    CANCELADO(3);
+    PENDENTE,
+    EM_ANDAMENTO,
+    CONCLUIDO,
+    CANCELADO;
 
-    private final int codigo;
+    /*private final int codigo;
 
     StatusAtividade(int codigo) {
         this.codigo = codigo;
@@ -29,6 +26,6 @@ public enum StatusAtividade {
             }
         }
         throw new IllegalArgumentException("Código de status inválido: " + codigo);
-    }
+    }*/
 
 }

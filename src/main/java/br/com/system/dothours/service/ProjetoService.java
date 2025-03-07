@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.StatusProjeto;
 import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Projeto;
@@ -172,6 +174,14 @@ public class ProjetoService {
 
         return projetoDTO;
 
+    }
+
+    public List<ProjetoDTO> findByFilters(String nome, StatusProjeto status, 
+                                          PrioridadeProjeto prioridade, LocalDate dataInicio) {
+        List<Projeto> projetos = projetoRepository.findByFilters(nome, status, prioridade, dataInicio);
+        return projetos.stream()
+                       .map(this::convertToDTO)
+                       .collect(Collectors.toList());
     }
 
 }

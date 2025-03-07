@@ -104,16 +104,12 @@ public class LancamentoHorasService {
 
     }
 
-    public List<LancamentoHoras> buscarLancamentos(Long idUsuario, String nomeAtividade) {
-        if (idUsuario != null && nomeAtividade != null) {
-            return lancamentoHorasRepository.findByUsuarioIdAndAtividadeNome(idUsuario, nomeAtividade);
-        } else if (idUsuario != null) {
-            return lancamentoHorasRepository.findByUsuarioId(idUsuario);
-        } else if (nomeAtividade != null) {
-            return lancamentoHorasRepository.findByAtividadeNome(nomeAtividade);
-        } else {
-            return lancamentoHorasRepository.findAll();
-        }
+    public List<LancamentoHoras> buscarLancamentos(Long idUsuario, Long idAtividade, String nomeAtividade, LocalDate dataRegistro) {
+        if (idUsuario != null || idAtividade != null || nomeAtividade != null || dataRegistro != null) {
+            return lancamentoHorasRepository.buscarLancamentos(idUsuario, idAtividade, nomeAtividade, dataRegistro);
+        } 
+        return lancamentoHorasRepository.findAll();
     }
+    
 
 }

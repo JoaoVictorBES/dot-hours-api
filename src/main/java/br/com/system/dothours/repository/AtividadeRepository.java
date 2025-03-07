@@ -1,11 +1,14 @@
 package br.com.system.dothours.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.StatusAtividade;
 import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
@@ -46,5 +49,21 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
 
     @Query("SELECT a FROM Atividade a WHERE a.projeto.id = :idProjeto")
     List<Atividade> findByProjetoId(@Param("idProjeto") Long idProjeto);
+
+    List<Atividade> findByAtivoTrue();
+
+    @Query("SELECT a FROM Atividade a WHERE " +
+           "(:nome IS NULL OR a.nome LIKE %:nome%) AND " +
+           "(:status IS NULL OR a.status = :status) AND " +
+           "(:prioridade IS NULL OR a.projeto.prioridade = :prioridade) AND " +
+           "(:dataInicio IS NULL OR a.dataInicio >= :dataInicio) AND " +
+           "(:dataFim IS NULL OR a.dataFim <= :dataFim)")
+    List<Atividade> findByFilters(
+        @Param("nome") String nome,
+        @Param("status") StatusAtividade status,
+        @Param("prioridade") PrioridadeProjeto prioridade,
+        @Param("dataInicio") LocalDate dataInicio,
+        @Param("dataFim") LocalDate dataFim
+    );
 
 }

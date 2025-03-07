@@ -1,6 +1,8 @@
 package br.com.system.dothours.controller;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +16,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.system.dothours.Enum.PrioridadeProjeto;
+import br.com.system.dothours.Enum.Role;
+import br.com.system.dothours.Enum.StatusAtividade;
 import br.com.system.dothours.dto.AtividadeDTO;
+import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
+import br.com.system.dothours.repository.AtividadeRepository;
 import br.com.system.dothours.repository.UsuarioRepository;
 import br.com.system.dothours.service.AtividadeService;
 import br.com.system.dothours.service.UsuarioService;
@@ -43,6 +51,9 @@ public class AtividadeController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private AtividadeRepository atividadeRepository;
+
     /**
      * Cria uma nova atividade com os dados fornecidos.
      *
@@ -63,7 +74,7 @@ public class AtividadeController {
 
             Usuario usuario = usuarioService.buscarPorUsername(username);       
 
-            if (usuario == null || usuario.getRole() == null || !usuario.getRole().equals("ADMIN")) {
+            if (usuario == null || usuario.getRole() == null || !usuario.getRole().equals(Role.ADMIN)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Apenas administradores podem criar atividades.");
             }
 
@@ -75,7 +86,6 @@ public class AtividadeController {
     }
 
 
-
     /**
      * Busca todas as atividades cadastradas.
      *
@@ -84,11 +94,10 @@ public class AtividadeController {
     @GetMapping("/listAll")
     public ResponseEntity<List<AtividadeDTO>> findAll() {
 
-        List<AtividadeDTO> atividades = atividadeService.findAll();
+        List<AtividadeDTO> atividades = atividadeService.listarAtividadesAtivas();
         return ResponseEntity.ok(atividades);
     
     }
-
 
 
     /**
@@ -106,7 +115,6 @@ public class AtividadeController {
         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
     }
-
 
 
     /*
@@ -130,7 +138,6 @@ public class AtividadeController {
     }
 
 
-
     /**
      * Exclui uma atividade pelo ID.
      *
@@ -151,7 +158,6 @@ public class AtividadeController {
     }
 
 
-
       /**
      * Retorna todas as atividades associadas a um projeto específico.
      *
@@ -167,8 +173,6 @@ public class AtividadeController {
     }
 
 
-
-
       /**
      * Retorna todas as atividades associadas a um usuário responsável específico.
      *
@@ -182,5 +186,51 @@ public class AtividadeController {
         return ResponseEntity.ok(atividades);
 
     }
+
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<String> alterarStatus(@PathVariable Long id, @RequestParam boolean ativo) {
+        atividadeService.alterarStatusAtividade(id, ativo);
+        String status = ativo ? "ativada" : "inativada";
+        return ResponseEntity.ok("Atividade " + status + " com sucesso!");
+    }
+
+
+    @PutMapping("/toggle-status/{id}")
+    public ResponseEntity<?> toggleAtivo(@PathVariable Long id) {
+        Optional<Atividade> atividadeOpt = atividadeRepository.findById(id);
+        
+        if (atividadeOpt.isPresent()) {
+            Atividade atividade = atividadeOpt.get();
+            atividade.setAtivo(!atividade.isAtivo()); // Alterna o status
+            atividadeRepository.save(atividade);
+            return ResponseEntity.ok("Status atualizado!");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Atividade não encontrada");
+        }
+    }
+
+    /**
+     * Retorna as atividades filtradas com base nos parâmetros fornecidos.
+     *
+     * @param nome O nome da atividade (opcional).
+     * @param status O status da atividade (opcional).
+     * @param prioridade A prioridade do projeto (opcional).
+     * @param dataInicio A data de início da atividade (opcional).
+     * @param dataFim A data de fim da atividade (opcional).
+     * @return Lista de atividades filtradas.
+     */
+    @GetMapping("/findByFilters")
+    public ResponseEntity<List<AtividadeDTO>> findByFilters(
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) StatusAtividade status,
+        @RequestParam(required = false) PrioridadeProjeto prioridade,
+        @RequestParam(required = false) LocalDate dataInicio,
+        @RequestParam(required = false) LocalDate dataFim
+    ) {
+        List<AtividadeDTO> atividades = atividadeService.findByFilters(nome, status, prioridade, dataInicio, dataFim);
+        return ResponseEntity.ok(atividades);
+    }
+
 
 }
