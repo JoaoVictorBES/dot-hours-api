@@ -1,6 +1,7 @@
 package br.com.system.dothours.controller;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,7 +82,8 @@ public class AtividadeController {
             AtividadeDTO novaAtividadeDTO = atividadeService.create(atividadeDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(novaAtividadeDTO);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap("error", e.getMessage())); // Retorna erro como JSON
         }
     }
 

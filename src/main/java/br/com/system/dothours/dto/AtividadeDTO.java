@@ -19,7 +19,7 @@ public class AtividadeDTO {
     private List<ProjetoDTO> projetoVinculado;
     private Long idProjetoVinculado;
     private List<Long> idUsuariosVinculados;
-    private Boolean ativo;
+    private Boolean ativo = true;
 
     // Construtor padrão
     public AtividadeDTO() {}

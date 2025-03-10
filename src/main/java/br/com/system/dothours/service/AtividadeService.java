@@ -88,7 +88,12 @@ public class AtividadeService {
         atividade.setStatus(StatusAtividade.valueOf(atividadeDTO.getStatus().name()));
         atividade.setDataCriacao(LocalDate.now());
         atividade.setProjeto(projeto);
-        atividade.setUsuarioResponsavel(usuarioResponsavel); // << Agora está inicializado corretamente
+        atividade.setUsuarioResponsavel(usuarioResponsavel);
+        atividade.setAtivo(true);
+        atividade.setAtivo(atividadeDTO.getAtivo() != null ? atividadeDTO.getAtivo() : true);
+
+
+        // << Agora está inicializado corretamente
 
         Atividade atividadeSalva = atividadesRepository.save(atividade);
 
