@@ -3,12 +3,16 @@ package br.com.system.dothours.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import br.com.system.dothours.Enum.PrioridadeProjeto;
 import br.com.system.dothours.Enum.StatusProjeto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import br.com.system.dothours.model.Projeto;
 
 public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
@@ -20,6 +24,8 @@ public interface ProjetoRepository extends JpaRepository<Projeto, Long> {
     List<Projeto> findByPrioridade(PrioridadeProjeto prioridade);
     
     List<Projeto> findByDataInicioGreaterThanEqual(LocalDate dataInicio);
+
+    Page<Projeto> findAll(Pageable pageable);
     
     @Query("SELECT p FROM Projeto p WHERE (:nome IS NULL OR p.nome LIKE %:nome%) " +
            "AND (:status IS NULL OR p.status = :status) " +

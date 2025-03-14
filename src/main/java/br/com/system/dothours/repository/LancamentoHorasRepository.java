@@ -1,11 +1,13 @@
 package br.com.system.dothours.repository;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.system.dothours.model.LancamentoHoras;
 
@@ -21,6 +23,8 @@ public interface LancamentoHorasRepository extends JpaRepository<LancamentoHoras
 
     List<LancamentoHoras> findByAtividadeId(Long idAtividade);
 
+    Page<LancamentoHoras> findAll(Pageable pageable);
+
     List<LancamentoHoras> findByAtividadeNomeAndDataRegistro(String nomeAtividade, LocalDate dataRegistro);
 
     @Query("SELECT lh FROM LancamentoHoras lh WHERE " +
@@ -32,5 +36,7 @@ public interface LancamentoHorasRepository extends JpaRepository<LancamentoHoras
                                             @Param("idAtividade") Long idAtividade,
                                             @Param("nomeAtividade") String nomeAtividade, 
                                             @Param("data") LocalDate dataRegistro);
+
+       
 }
 

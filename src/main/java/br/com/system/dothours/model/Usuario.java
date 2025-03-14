@@ -70,18 +70,22 @@ public class Usuario implements UserDetails {
     private List<Atividade> atividades = new ArrayList<>();
 
     
-    public Usuario() {
+    public Usuario(){
         
     }
 
-    public Usuario(Long id, String username, String email, String password, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, String role) {
+    public Usuario(String string, String string2, String string3, LocalDateTime localDateTime, LocalDateTime localDateTime2, String string4) {
+        
+    }
+
+    public Usuario(Long id, String username, String email, String password, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.dataCriacao = dataCriacao;
         this.ultimoLogin = ultimoLogin;
-        
+        this.role = role;
     }
 
     public Long getId() {

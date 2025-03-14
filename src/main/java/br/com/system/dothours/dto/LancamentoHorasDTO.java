@@ -23,12 +23,13 @@ public class LancamentoHorasDTO {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private UsuarioDTO usuario;
     private String descricao;
+    private String nomeUsuarioResponsavel;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime dataInicio;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime dataInicio;
     
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime dataFim;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime dataFim;
     private LocalDate dataRegistro;
 
     @JsonFormat(pattern = "HH:mm") 
@@ -54,6 +55,7 @@ public class LancamentoHorasDTO {
         dto.setDataFim(lancamentoHoras.getDataFim());
         dto.setDataRegistro(lancamentoHoras.getDataRegistro());
         dto.setTempoDuracao(lancamentoHoras.getTempoDuracao());
+        dto.setNomeUsuarioResponsavel(lancamentoHoras.getUsuario().getUsername());
         return dto;
     }
     
@@ -90,16 +92,16 @@ public class LancamentoHorasDTO {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    public LocalDateTime getDataInicio() {
+    public LocalTime getDataInicio() {
         return dataInicio;
     }
-    public void setDataInicio(LocalDateTime dataInicio) {
+    public void setDataInicio(LocalTime dataInicio) {
         this.dataInicio = dataInicio;
     }
-    public LocalDateTime getDataFim() {
+    public LocalTime getDataFim() {
         return dataFim;
     }
-    public void setDataFim(LocalDateTime dataFim) {
+    public void setDataFim(LocalTime dataFim) {
         this.dataFim = dataFim;
     }
     public LocalDate getDataRegistro() {
@@ -146,6 +148,28 @@ public class LancamentoHorasDTO {
                 ", tempoDuracao='" + tempoDuracao + '\'' +
                 '}';
     }
+
+
+    public void setAtividade(AtividadeDTO atividade) {
+        this.atividade = atividade;
+    }
+
+
+    public void setUsuario(UsuarioDTO usuario) {
+        this.usuario = usuario;
+    }
+
+
+    public String getNomeUsuarioResponsavel() {
+        return nomeUsuarioResponsavel;
+    }
+
+
+    public void setNomeUsuarioResponsavel(String nomeUsuarioResponsavel) {
+        this.nomeUsuarioResponsavel = nomeUsuarioResponsavel;
+    }
+
+    
 
 
 }

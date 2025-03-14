@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.system.dothours.Enum.PrioridadeProjeto;
 import br.com.system.dothours.Enum.Role;
 import br.com.system.dothours.Enum.StatusProjeto;
+import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.ProjetoService;
@@ -73,15 +77,16 @@ public class ProjetoController {
      *
      * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs dos projetos cadastrados.
      */
-    @GetMapping("/listAll")
-    public ResponseEntity<List<ProjetoDTO>> listarProjetos() {
+    @GetMapping("/findAll")
+    public ResponseEntity<Page<ProjetoDTO>> listarProjetos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
 
-        List<ProjetoDTO> projetos = projetoService.findAll();
-        return ResponseEntity.ok(projetos);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProjetoDTO> projetosDTOPage = projetoService.findAll(pageable);
 
+        return ResponseEntity.ok(projetosDTOPage);
     }
-
-
 
     /**
      * Busca um projeto pelo ID.

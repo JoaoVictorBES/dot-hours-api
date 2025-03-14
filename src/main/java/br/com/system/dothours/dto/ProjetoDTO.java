@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.com.system.dothours.Enum.PrioridadeProjeto;
 import br.com.system.dothours.Enum.StatusProjeto;
+import br.com.system.dothours.model.Projeto;
 
 
 
@@ -18,14 +19,21 @@ public class ProjetoDTO {
     private LocalDate dataFim;
     private StatusProjeto status;
     private Long idUsuarioResponsavel;
+    private String nomeUsuarioResponsavel;
     private LocalDate dataCriacao;
     private PrioridadeProjeto prioridade;
     private List<AtividadeDTO> atividades;
 
     public ProjetoDTO() {}
 
+    public ProjetoDTO(Projeto projeto) {
+        this.id = projeto.getId();
+        this.nome = projeto.getNome();
+        this.descricao = projeto.getDescricao();
+    }
+
     public ProjetoDTO(Long id, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, 
-                      StatusProjeto status, Long idUsuarioResponsavel, LocalDate dataCriacao, PrioridadeProjeto prioridade, 
+                      StatusProjeto status, Long idUsuarioResponsavel, String nomeUsuarioResponsavel, LocalDate dataCriacao, PrioridadeProjeto prioridade, 
                       List<AtividadeDTO> atividades) {
         this.id = id;
         this.nome = nome;
@@ -34,6 +42,7 @@ public class ProjetoDTO {
         this.dataFim = dataFim;
         this.status = status;
         this.idUsuarioResponsavel = idUsuarioResponsavel;
+        this.nomeUsuarioResponsavel = nomeUsuarioResponsavel;
         this.dataCriacao = dataCriacao;
         this.prioridade = prioridade;
         this.atividades = atividades;
@@ -118,6 +127,21 @@ public class ProjetoDTO {
     public void setAtividades(List<AtividadeDTO> atividades) {
         this.atividades = atividades;
     }
+
+    public String getNomeUsuarioResponsavel() {
+        return nomeUsuarioResponsavel;
+    }
+
+    public void setNomeUsuarioResponsavel(String nomeUsuarioResponsavel) {
+        this.nomeUsuarioResponsavel = nomeUsuarioResponsavel;
+    }
+
+    
+
+    /*public static ProjetoDTO fromEntity(Projeto projeto) {
+        return new ProjetoDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao()); // Ajuste conforme seu modelo
+    }*/
+
  
     
 

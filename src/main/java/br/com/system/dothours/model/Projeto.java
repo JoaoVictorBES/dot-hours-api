@@ -1,6 +1,7 @@
 package br.com.system.dothours.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import br.com.system.dothours.Enum.PrioridadeProjeto;
@@ -72,6 +73,11 @@ public class Projeto {
         this.dataCriacao = dataCriacao;
         this.prioridade = prioridade;
         this.status = status;
+    }
+
+    public Projeto(String string, String string2, String string3, String string4, int i, int j, LocalDateTime now,
+            String string5) {
+        //TODO Auto-generated constructor stub
     }
 
     @PrePersist

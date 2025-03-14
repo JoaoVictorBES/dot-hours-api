@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,14 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.system.dothours.Enum.PrioridadeProjeto;
 import br.com.system.dothours.Enum.Role;
 import br.com.system.dothours.Enum.StatusAtividade;
+import br.com.system.dothours.config.SecurityConfig;
 import br.com.system.dothours.dto.AtividadeDTO;
+import br.com.system.dothours.dto.ProjetoDTO;
 import br.com.system.dothours.model.Atividade;
+import br.com.system.dothours.model.AtividadeUsuario;
 import br.com.system.dothours.model.Projeto;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.repository.AtividadeRepository;
 import br.com.system.dothours.repository.UsuarioRepository;
 import br.com.system.dothours.service.AtividadeService;
+import br.com.system.dothours.service.AtividadeUsuarioService;
 import br.com.system.dothours.service.UsuarioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 
 
@@ -46,14 +54,14 @@ public class AtividadeController {
     @Autowired
     private AtividadeService atividadeService;
 
-    @Autowired 
-    private UsuarioRepository usuarioRepository;
-
     @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
     private AtividadeRepository atividadeRepository;
+
+    @Autowired
+    private AtividadeUsuarioService atividadeUsuarioService;
 
     /**
      * Cria uma nova atividade com os dados fornecidos.
@@ -64,6 +72,7 @@ public class AtividadeController {
      */
     
     @PostMapping("/create")
+    //@SecurityRequirement(name = SecurityConfig.SECURITY)
     public ResponseEntity<?> criarAtividade(@RequestBody AtividadeDTO atividadeDTO) {
         try {
             System.out.println("Recebendo dados da atividade: " + atividadeDTO);
@@ -93,6 +102,18 @@ public class AtividadeController {
      *
      * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs das atividades encontradas.
      */
+    @GetMapping("/findAll")
+    public ResponseEntity<Page<AtividadeDTO>> listarAtividades(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AtividadeDTO> atividadesDTOPage = atividadeService.findAllAtivas(pageable);
+
+        return ResponseEntity.ok(atividadesDTOPage);
+    
+    }
+
     @GetMapping("/listAll")
     public ResponseEntity<List<AtividadeDTO>> findAll() {
 
@@ -118,6 +139,18 @@ public class AtividadeController {
 
     }
 
+    @GetMapping("/findAtividadeByIdUsuario/{id}")
+    public ResponseEntity<List<AtividadeDTO>> findAtividadeByIdUsuario(@PathVariable Long id) {
+
+        List<AtividadeDTO> atividadesDTO = atividadeService.findAtividadeByIdUsuario(id);
+
+        if (atividadesDTO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(atividadesDTO);
+
+    }
 
     /*
      * Atualiza uma atividade com os dados fornecidos.
@@ -132,6 +165,7 @@ public class AtividadeController {
 
         try {
             AtividadeDTO atividade = atividadeService.update(id, atividadeAtualizada);
+            atividadeUsuarioService.save(atividadeAtualizada.getIdUsuariosVinculados(), atividade);
             return ResponseEntity.ok(atividade);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

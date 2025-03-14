@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import br.com.system.dothours.Enum.PrioridadeProjeto;
 import br.com.system.dothours.Enum.StatusAtividade;
@@ -126,8 +128,9 @@ public class AtividadeService {
      *
      * @return Lista de DTOs das atividades.
      */
-    public List<AtividadeDTO> findAll() {
-        return atividadesRepository.findAll().stream().map(this::convertToDTO).toList();
+    public Page<AtividadeDTO> findAll(Pageable pageable) {
+        return atividadesRepository.findAll(pageable)
+         .map(this::convertToDTO) ;
     }
 
 
@@ -142,6 +145,23 @@ public class AtividadeService {
         return atividadesRepository.findById(id).map(this::convertToDTO);
     }
 
+    public List<AtividadeDTO> findAtividadeByIdUsuario(Long id) {
+
+       // Obtém a lista de atividades do repositório
+        List<Atividade> atividades = atividadesRepository.findAtividadeByIdUsuario(id);
+
+        
+        // Converte cada Atividade para AtividadeDTO
+        List <AtividadeDTO> atividadeDTO = atividades.stream()
+                .map(this::convertToDTO) // Usa o método convertToDTO para cada Atividade
+                .collect(Collectors.toList()); // Coleta os resultados em uma lista de AtividadeDTO
+
+        for(AtividadeDTO  atividade: atividadeDTO){
+          atividade.setHorasAtividade(atividadesRepository.findTotalHorasAtividadeByUser(id, atividade.getId()));
+        }
+
+        return atividadeDTO;
+    }
 
 
      /**
@@ -197,6 +217,7 @@ public class AtividadeService {
         dto.setDataFim(atividade.getDataFim());
         dto.setStatus(atividade.getStatus());
         dto.setDataCriacao(atividade.getDataCriacao());
+        dto.setNomeUsuarioResponsavel(atividade.getUsuarioResponsavel().getUsername());
     
         // Prevenção contra NullPointerException
         if (atividade.getUsuarioResponsavel() != null) {
@@ -301,5 +322,27 @@ public class AtividadeService {
         List<Atividade> atividades = atividadesRepository.findByFilters(nome, status, prioridade, dataInicio, dataFim);
         return atividades.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
+
+    public Page<AtividadeDTO> findAllAtivas(Pageable pageable) {
+        return atividadesRepository.findByAtivoTrue(pageable)
+               .map(this::convertToDTO);
+    }
+
+    public String findTotalHorasAtividadeByUser(Long idUsuario, Long idAtividade) {
+        Long totalSegundos = atividadesRepository.findTotalHorasAtividadeByUser(idUsuario, idAtividade);
+    
+        // Se o total de segundos for nulo ou zero, retorna "00:00:00"
+        if (totalSegundos == null || totalSegundos == 0) {
+            return "00:00:00";
+        }
+
+        // Convertendo a duração de segundos para formato HH:mm
+        Long horas = totalSegundos / 3600;
+        Long minutos = (totalSegundos % 3600) / 60;
+        Long segundos = totalSegundos % 60;
+    
+        return String.format("%02d:%02d:%02d", horas, minutos, segundos);
+    }
+    
 
 }

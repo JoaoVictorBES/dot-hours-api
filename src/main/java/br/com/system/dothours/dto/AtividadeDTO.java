@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.com.system.dothours.Enum.StatusAtividade;
+import br.com.system.dothours.model.Atividade;
 
 public class AtividadeDTO {
 
@@ -14,15 +15,21 @@ public class AtividadeDTO {
     private LocalDate dataFim;
     private StatusAtividade status;
     private Long idUsuarioResponsavel;
+    private String nomeUsuarioResponsavel;
     private LocalDate dataCriacao; 
     private List<UsuarioDTO> usuarioVinculado;
     private List<ProjetoDTO> projetoVinculado;
     private Long idProjetoVinculado;
     private List<Long> idUsuariosVinculados;
     private Boolean ativo = true;
+    private Long horasAtividade;
 
     // Construtor padrão
     public AtividadeDTO() {}
+
+    public AtividadeDTO(Long id, StatusAtividade status, String nome){
+        this.id = id;
+    }
 
     public AtividadeDTO(Long id){
         this.id = id;
@@ -30,7 +37,7 @@ public class AtividadeDTO {
     
     // Construtor com parâmetros
     public AtividadeDTO(Long id, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, 
-                         StatusAtividade status, Long idUsuarioResponsavel, LocalDate dataCriacao) {
+                         StatusAtividade status, Long idUsuarioResponsavel, String nomeUsuarioResonsavel, LocalDate dataCriacao) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -38,6 +45,7 @@ public class AtividadeDTO {
         this.dataFim = dataFim;
         this.status = status;
         this.idUsuarioResponsavel = idUsuarioResponsavel;
+        this.nomeUsuarioResponsavel = nomeUsuarioResponsavel;
         this.dataCriacao = dataCriacao;
     }
 
@@ -147,6 +155,20 @@ public class AtividadeDTO {
         this.ativo = ativo;
     }
 
+    
+
+    public String getNomeUsuarioResponsavel() {
+        return nomeUsuarioResponsavel;
+    }
+
+    public void setNomeUsuarioResponsavel(String nomeUsuarioResponsavel) {
+        this.nomeUsuarioResponsavel = nomeUsuarioResponsavel;
+    }
+
+    public void setIdUsuariosVinculados(List<Long> idUsuariosVinculados) {
+        this.idUsuariosVinculados = idUsuariosVinculados;
+    }
+
     @Override
     public String toString() {
         return "AtividadeDTO{" +
@@ -162,6 +184,22 @@ public class AtividadeDTO {
             ", idUsuariosVinculados=" + idUsuariosVinculados +
             ", ativo=" + ativo +
             '}';
+    }
+
+     public static AtividadeDTO fromEntity(Atividade atividade) {
+        return new AtividadeDTO(
+            atividade.getId(),
+            atividade.getStatus(),
+            atividade.getNome()
+        );
+    }
+
+    public Long getHorasAtividade() {
+        return horasAtividade;
+    }
+
+    public void setHorasAtividade(Long horasAtividade) {
+        this.horasAtividade = horasAtividade;
     }
 
 }

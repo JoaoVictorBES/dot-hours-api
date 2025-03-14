@@ -1,6 +1,7 @@
 package br.com.system.dothours.config;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -43,9 +45,9 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200")
-                    .allowedMethods("GET", "POST", "PUT", "DELETE")
-                    .allowedHeaders("Authorization", "Content-Type", "Accept")
+                registry.addMapping("/**").allowedOriginPatterns("*")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                    .allowedHeaders("Authorization", "Content-Type", "Accept", "Cache-Control")
                     .allowCredentials(true)
                     .maxAge(3600);  // Cache de CORS por 1 hora
             }
@@ -54,6 +56,7 @@ public class CorsConfig {
     }
     
 
+    
 
      /**
      * Configura um filtro CORS personalizado para a aplicação.

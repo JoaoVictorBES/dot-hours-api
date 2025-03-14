@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.model.LancamentoHoras;
@@ -32,25 +34,16 @@ public class LancamentoHorasService {
             lancamentoHoras.setUsuario(null); // Lançamento sem usuário autenticado
         }
 
+        
         lancamentoHoras.setDataRegistro(LocalDate.now());
         return lancamentoHorasRepository.save(lancamentoHoras);
 
     }
 
-    
-
-     /**
-     * Retorna todos os lançamentos de horas cadastrados.
-     *
-     * @return Lista de {@link LancamentoHoras}.
-     */
-    public List<LancamentoHoras> findAll() {
-
-        return lancamentoHorasRepository.findAll();
-
+    public Page<LancamentoHoras> findAll(Pageable pageable) {
+        return lancamentoHorasRepository.findAll(pageable);
     }
 
-    
 
     /**
      * Busca um lançamento de horas pelo seu ID.

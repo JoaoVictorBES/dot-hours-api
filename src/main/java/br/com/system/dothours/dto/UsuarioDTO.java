@@ -22,12 +22,24 @@ public class UsuarioDTO {
     private LocalDateTime ultimoLogin;
     private Role role;
 
+
+    public UsuarioDTO(){
+
+    }
+
     public UsuarioDTO(Long id, String username, String email, LocalDateTime dataCriacao, LocalDateTime ultimoLogin, Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.dataCriacao = dataCriacao;
         this.ultimoLogin = ultimoLogin;
+        this.role = role;
+    }
+
+    public UsuarioDTO(Long id, String username, String email, Role role) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
         this.role = role;
     }
 

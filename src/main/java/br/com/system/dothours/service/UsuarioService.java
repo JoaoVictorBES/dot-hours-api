@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.Enum.Role;
+import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Usuario;
+import br.com.system.dothours.repository.AtividadeRepository;
 import br.com.system.dothours.repository.UsuarioRepository;
 
 @Service
@@ -26,6 +30,8 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private AtividadeRepository atividadeRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -75,11 +81,27 @@ public class UsuarioService {
      *
      * @return Lista de {@link UsuarioDTO}.
      */
-    public List<UsuarioDTO> findAll() {
-        return usuarioRepository.findAll()
-                                .stream()
-                                .map(UsuarioDTO::fromEntity)
-                                .collect(Collectors.toList());
+      public Page<UsuarioDTO> findAll(Pageable pageable) {
+        // Chama o findAll no repositório e converte os resultados
+        Page<Usuario> usuarioPage = usuarioRepository.findAll(pageable);
+        return usuarioPage.map(UsuarioDTO::fromEntity);
+    }
+
+    public List<UsuarioDTO> listAll() {
+        // Busca todos os usuários no repositório
+        List<Usuario> usuarios = usuarioRepository.findAll();
+    
+        // Converte a lista de Usuario para UsuarioDTO
+        List<UsuarioDTO> usuariosDTO = usuarios.stream()
+            .map(usuario -> new UsuarioDTO(
+                usuario.getId(),
+                usuario.getUsername(),
+                usuario.getEmail(),
+                usuario.getRole()
+            ))
+            .collect(Collectors.toList());
+    
+        return usuariosDTO;
     }
 
 
@@ -155,7 +177,7 @@ public class UsuarioService {
         if (role != null) {
             usuarios = usuarioRepository.findByRole(role);
         } else if (atividade != null) {
-            usuarios = usuarioRepository.findByAtividades(atividade);
+           usuarios = usuarioRepository.findUsuariosByAtividade(atividade.getId());
         } else if (ultimoLogin != null) {
             usuarios = usuarioRepository.findByUltimoLoginAfter(ultimoLogin);
         } else {
@@ -164,5 +186,19 @@ public class UsuarioService {
 
         return usuarios.stream().map(UsuarioDTO::fromEntity).collect(Collectors.toList());
     }
+
+    public List<AtividadeDTO> listarAtividadesPorUsuario(Long usuarioId) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+
+        if (usuarioOpt.isEmpty()) {
+            throw new RuntimeException("Usuário não encontrado!");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        List<Atividade> atividades = atividadeRepository.findByUsuarioResponsavel(usuario);
+
+        return atividades.stream().map(AtividadeDTO::fromEntity).collect(Collectors.toList());
+    }
+
 
 }

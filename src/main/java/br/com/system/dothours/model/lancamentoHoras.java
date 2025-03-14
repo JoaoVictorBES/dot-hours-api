@@ -35,10 +35,10 @@ public class LancamentoHoras {
     private String descricao;
 
     @Column(name = "data_inicio", nullable = false)
-    private LocalDateTime dataInicio;
+    private LocalTime dataInicio;
 
     @Column(name = "data_fim", nullable = false)
-    private LocalDateTime dataFim;
+    private LocalTime dataFim;
 
     @Column(name = "data_registro", nullable = false, updatable = false)
     private LocalDate dataRegistro;
@@ -53,7 +53,7 @@ public class LancamentoHoras {
 
     
 
-    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalDateTime dataInicio, LocalDateTime dataFim, LocalDate dataRegistro) {
+    public LancamentoHoras(Long id, Atividade atividade, Usuario usuario, String descricao, LocalTime dataInicio, LocalTime dataFim, LocalDate dataRegistro, LocalTime tempoDuracao) {
         this.id = id;
         this.atividade = atividade;
         this.usuario = usuario;
@@ -61,7 +61,15 @@ public class LancamentoHoras {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.dataRegistro = dataRegistro;
+        this.tempoDuracao = tempoDuracao;
     }
+
+    public LancamentoHoras(int i, int j, String string, String string2, String string3, LocalDateTime now,
+            String string4) {
+        //TODO Auto-generated constructor stub
+    }
+
+
 
     public static LancamentoHoras fromReqDTO (LancamentoHorasDTO dto){
         Atividade atividade = new Atividade();
@@ -117,19 +125,19 @@ public class LancamentoHoras {
         this.descricao = descricao;
     }
 
-    public LocalDateTime getDataInicio() {
+    public LocalTime getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDateTime dataInicio) {
+    public void setDataInicio(LocalTime dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public LocalDateTime getDataFim() {
+    public LocalTime getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(LocalDateTime dataFim) {
+    public void setDataFim(LocalTime dataFim) {
         this.dataFim = dataFim;
     }
 

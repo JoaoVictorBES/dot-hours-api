@@ -6,6 +6,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import br.com.system.dothours.Enum.Role;
 
 import br.com.system.dothours.dto.LancamentoHorasDTO;
 import br.com.system.dothours.model.LancamentoHoras;
@@ -78,16 +80,18 @@ public class LancamentoHorasController {
      * Lista todos os lançamentos de horas cadastrados.
      *
      * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs dos lançamentos de horas cadastrados.
-     */
-    @GetMapping ("/findAll")
-    public ResponseEntity<List<LancamentoHorasDTO>> listarLancamentos() {
+        */
+    @GetMapping("/findAll")
+    public ResponseEntity<Page<LancamentoHorasDTO>> listarLancamentos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
 
-        List<LancamentoHoras> lancamentos = lancamentoHorasService.findAll();
-        List<LancamentoHorasDTO> lancamentosDTO = lancamentos.stream()
-            .map(LancamentoHorasDTO::fromEntity)
-            .collect(Collectors.toList());
-        return ResponseEntity.ok(lancamentosDTO);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LancamentoHoras> lancamentosPage = lancamentoHorasService.findAll(pageable);
 
+        Page<LancamentoHorasDTO> lancamentosDTOPage = lancamentosPage.map(LancamentoHorasDTO::fromEntity);
+
+        return ResponseEntity.ok(lancamentosDTOPage);
     }
 
      /**

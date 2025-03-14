@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.system.dothours.Enum.Role;
+import br.com.system.dothours.dto.AtividadeDTO;
 import br.com.system.dothours.dto.UsuarioDTO;
 import br.com.system.dothours.model.Atividade;
 import br.com.system.dothours.model.Usuario;
 import br.com.system.dothours.service.UsuarioService;
+import io.swagger.models.Response;
 
 
 /*
@@ -72,8 +77,20 @@ public class UsuarioController {
      * @return A resposta HTTP com o status 200 (OK) e a lista de DTOs de usuários.
      */
     @GetMapping("/findAll")
-    public ResponseEntity<List<UsuarioDTO>> findAll() {
-        return ResponseEntity.ok(usuarioService.findAll());
+    public ResponseEntity<Page<UsuarioDTO>> findAll( 
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        
+        Page<UsuarioDTO> usuarioDTOPage = usuarioService.findAll(pageable);
+
+        return ResponseEntity.ok(usuarioDTOPage);
+    }
+
+    @GetMapping("/listAll")
+    public ResponseEntity<List<UsuarioDTO>> listAll() {
+        return ResponseEntity.ok(usuarioService.listAll());
     }
 
 
@@ -142,4 +159,11 @@ public class UsuarioController {
         }
         return ResponseEntity.ok(usuarios);
     }
+
+    @GetMapping("/{id}/atividades")
+    public ResponseEntity<List<AtividadeDTO>> listarAtividadesPorUsuario(@PathVariable Long id) {
+        List<AtividadeDTO> atividades = usuarioService.listarAtividadesPorUsuario(id);
+        return ResponseEntity.ok(atividades);
+    }
+
 }

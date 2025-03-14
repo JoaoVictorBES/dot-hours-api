@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.system.dothours.Enum.PrioridadeProjeto;
@@ -69,12 +71,12 @@ public class ProjetoService {
      *
      * @return Lista de {ProjetoDTO}.
      */
-    public List<ProjetoDTO> findAll() {
+    public Page<ProjetoDTO> findAll(Pageable pageable) {
 
-        return projetoRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-
+        return projetoRepository.findAll(pageable)
+            .map(this::convertToDTO); // Converte cada Projeto para ProjetoDTO
+            
     }
-
 
 
      /**
@@ -156,6 +158,7 @@ public class ProjetoService {
         projetoDTO.setStatus(projeto.getStatus());
         projetoDTO.setPrioridade(projeto.getPrioridade());
         projetoDTO.setIdUsuarioResponsavel(projeto.getUsuarioResponsavel().getId());
+        projetoDTO.setNomeUsuarioResponsavel(projeto.getUsuarioResponsavel().getUsername());
 
         if (projeto.getAtividades() != null) {
             List<AtividadeDTO> atividadesDTO = projeto.getAtividades().stream()
@@ -167,11 +170,11 @@ public class ProjetoService {
                     atividade.getDataFim(),
                     atividade.getStatus(),
                     atividade.getUsuarioResponsavel().getId(),
+                    atividade.getUsuarioResponsavel().getUsername(),
                     atividade.getDataCriacao()))
                 .collect(Collectors.toList());
             projetoDTO.setAtividades(atividadesDTO);
     }
-
         return projetoDTO;
 
     }

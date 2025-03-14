@@ -2,6 +2,7 @@ package br.com.system.dothours.model;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -69,7 +70,7 @@ public class Atividade {
         
     }
 
-    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, StatusAtividade status, Usuario usuarioResponsavel, LocalDate dataCriacao) {
+    public Atividade(Long id, Projeto projeto, String nome, String descricao, LocalDate dataInicio, LocalDate dataFim, StatusAtividade status, Usuario usuarioResponsavel, LocalDate dataCriacao, Boolean ativo) {
         this.id = id;
         this.projeto = projeto;
         this.nome = nome;
@@ -79,6 +80,12 @@ public class Atividade {
         this.status = status;
         this.usuarioResponsavel = usuarioResponsavel;
         this.dataCriacao = dataCriacao;
+        this.ativo = ativo;
+    }
+
+    public Atividade(String string, String string2, String string3, String string4, String string5, int i, int j,
+            LocalDateTime now, boolean b) {
+        //TODO Auto-generated constructor stub
     }
 
     public Long getId() {
